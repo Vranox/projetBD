@@ -1,0 +1,31 @@
+package modele;
+
+import java.io.*;
+import java.sql.*;
+
+/**
+ * Cette classe permet la connexion à différentes BD depuis différents endroits.
+ * @author pvallee
+ *
+ */
+public class ConnexionBD {
+
+	/**
+	 * Cette fonction permet de se connecter à la base de données de l'IUT depuis les postes de l'IUT.
+	 * @return
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public static Connection ConnectFromIUT(String username, String password) throws SQLException, IOException{
+		try{ 
+			Class.forName ("oracle.jdbc.driver.OracleDriver");
+			}    
+		catch (ClassNotFoundException e){ 
+			System.out.println ("Echec dans le chargement de driver d'oracle"); 
+			e.printStackTrace (); 
+			}// Connection à la base de données
+		System.out.println ("Connexion à la base de données réussie....");
+		return DriverManager.getConnection ("jdbc:oracle:thin:@madere:1521:info", username, password);
+		}
+	}
+	
