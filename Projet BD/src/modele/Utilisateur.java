@@ -7,12 +7,25 @@ package modele;
 public class Utilisateur {
 	private String username;
 	private String password;
-	private int droits;
 	
-	public Utilisateur(String username, String password, int droits){
-		//TODO
-	}
 	public Utilisateur(String username, String password){
 			//TODO
 		}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
 }
