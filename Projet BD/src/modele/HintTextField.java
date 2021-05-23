@@ -30,7 +30,7 @@ public class HintTextField extends JTextField {
       }  
   
       @Override  
-      public void focusLost(FocusEvent e) {  
+      public void focusLost(FocusEvent e	) {  
         if (getText().equals(hint)|| getText().length()==0) {  
           setText(hint);  
           setFont(lostFont);  

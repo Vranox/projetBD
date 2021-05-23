@@ -6,9 +6,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Arrays;
+import java.io.IOException;
+import java.sql.*;
 
 import javax.swing.*;
 
+import modele.ConnexionBD;
 import modele.Utilisateur;
 import vue.*;
 
@@ -21,6 +24,9 @@ public class Controleur implements ActionListener {
 	String adminId = "a";
 	String adminPwd = "a";
 	Utilisateur user;
+	Connection connection;
+	String email;
+	String pwd;
 	public Controleur(FenetreMere parFenetremere) {
 		fenetremere = parFenetremere;
 		panelConnexion = fenetremere.getPanelConnexion();
@@ -32,9 +38,10 @@ public class Controleur implements ActionListener {
 	public void actionPerformed(ActionEvent parEvt) {
 		boutonLogin = panelConnexion.getLoginBtn();
 		if(parEvt.getSource()==boutonLogin) {
-			System.out.println("click");
-			System.out.println("email: "+panelConnexion.getEmailTxt().getText()+" pwd: "+new String(panelConnexion.getPwdTxt().getPassword()));
-			if(panelConnexion.getEmailTxt().getText().equals(adminId) && new String(panelConnexion.getPwdTxt().getPassword()).equals(adminPwd)) {
+			email = panelConnexion.getEmailTxt().getText();
+			pwd = new String(panelConnexion.getPwdTxt().getPassword());
+			System.out.println("email: "+email+" pwd: "+pwd);
+			if(email.equals(adminId) && pwd.equals(adminPwd)) {
 				user = new Utilisateur(adminId,adminPwd);
 				System.out.println("success");
 				fenetremere.dispose();
@@ -42,9 +49,23 @@ public class Controleur implements ActionListener {
 				panelAdmin = fenetremereD.getPanelAdmin();
 				fenetremereD.getPanelAdmin().enregistreEcouteur(this);
 			}
-			
-			else {
-				System.out.println("denied");
+			try {
+				new ConnexionBD();
+				connection = ConnexionBD.ConnectFromIUT();
+				Statement stmt = connection.createStatement ();
+				String sql = "SELECT * FROM ETUDIANT WHERE email = '"+email+"' AND mdp='"+pwd+"'";
+				ResultSet rset = stmt.executeQuery(sql);
+				if(rset.next()) {
+					user = new Utilisateur(email,pwd);
+					System.out.println("success");
+					fenetremere.dispose();
+					fenetremereD = new FenetreMere("Session Etudiant");
+				}
+				else {
+					panelConnexion.getLabelFill().setText("Identifiant ou Mot de Passe INCORRECT");
+				}
+			}catch(Exception e) {
+				System.out.println(e.getMessage());
 			}
 		}
 		else if(Arrays.asList(panelAdmin.getBoutonsMenuCentre()).contains(parEvt.getSource())) // bouton du panelAdmin (ex: rechercher livre, ajouter livre.. ) cliqué 

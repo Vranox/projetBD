@@ -16,7 +16,7 @@ public class ConnexionBD {
 	 * @throws SQLException
 	 * @throws IOException
 	 */
-	public static Connection ConnectFromIUT(String username, String password) throws SQLException, IOException{
+	public static Connection ConnectFromIUT() throws SQLException, IOException{
 		try{ 
 			Class.forName ("oracle.jdbc.driver.OracleDriver");
 			}    
@@ -25,7 +25,7 @@ public class ConnexionBD {
 			e.printStackTrace (); 
 			}// Connection à la base de données
 		System.out.println ("Connexion à la base de données réussie....");
-		return DriverManager.getConnection ("jdbc:oracle:thin:@madere:1521:info", username, password);
+		return DriverManager.getConnection ("jdbc:oracle:thin:@localhost:1521:info","dstengel","azerty");
 		}
 	}
 	

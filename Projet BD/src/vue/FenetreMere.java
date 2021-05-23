@@ -9,6 +9,7 @@ public class FenetreMere extends JFrame {
 
 	PanelConnexion panelConnexion;
 	PanelAdmin panelAdmin;
+	PanelEtudiant panelEtudiant;
 	public FenetreMere(String parTitre){
 		super(parTitre);
 		if(parTitre.equals("Connection BU")) {
@@ -19,6 +20,11 @@ public class FenetreMere extends JFrame {
 		else if(parTitre.equals("Session Admin")) {
 			panelAdmin = new PanelAdmin();
 			setContentPane(panelAdmin);
+			setSize(1000,800);
+		}
+		else if(parTitre.equals("Session Etudiant")) {
+			panelEtudiant = new PanelEtudiant();
+			setContentPane(panelEtudiant);
 			setSize(1000,800);
 		}
 		setDefaultCloseOperation(EXIT_ON_CLOSE);

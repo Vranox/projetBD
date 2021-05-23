@@ -1,5 +1,7 @@
 package vue;
 
-public class PanelEtudiant {
+import javax.swing.*;
+
+public class PanelEtudiant extends JPanel{
 
 }
