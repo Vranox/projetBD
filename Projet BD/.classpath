@@ -6,6 +6,6 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/damys/git/ProjetBD/Projet BD/driver/classes12.jar"/>
+	<classpathentry kind="lib" path="driver/classes12.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
