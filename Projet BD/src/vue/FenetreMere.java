@@ -38,5 +38,8 @@ public class FenetreMere extends JFrame {
 	public void setPanelConnexion(PanelConnexion panelConnexion) {
 		this.panelConnexion = panelConnexion;
 	}
+	public PanelAdmin getPanelAdmin() {
+		return panelAdmin;
+	}
 	
 }
