@@ -3,12 +3,15 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.Window;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.swing.* ;
 public class FenetreMere extends JFrame {
 
 	PanelConnexion panelConnexion;
 	PanelAdmin panelAdmin;
+	PanelRecherche panelRecherche;
 	PanelEtudiant panelEtudiant;
 	public FenetreMere(String parTitre){
 		super(parTitre);
@@ -19,6 +22,10 @@ public class FenetreMere extends JFrame {
 		}
 		else if(parTitre.equals("Session Admin")) {
 			panelAdmin = new PanelAdmin();
+			
+			// ajouter ici les instantiations des panels admin
+			panelRecherche = new PanelRecherche();
+			
 			setContentPane(panelAdmin);
 			setSize(1000,800);
 		}
@@ -31,6 +38,9 @@ public class FenetreMere extends JFrame {
 		setVisible(true);
 		this.setResizable(false);
 		FenetreMere.centreWindow(this);
+	}
+	public PanelRecherche getPanelRecherche() {
+		return panelRecherche;
 	}
 	public static void centreWindow(Window frame) {
 	    Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();

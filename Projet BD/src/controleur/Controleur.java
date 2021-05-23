@@ -20,6 +20,7 @@ public class Controleur implements ActionListener {
 	FenetreMere fenetremereD;
 	PanelConnexion panelConnexion;
 	PanelAdmin panelAdmin;
+	PanelRecherche panelRecherche;
 	JButton boutonLogin;
 	String adminId = "a";
 	String adminPwd = "a";
@@ -72,7 +73,12 @@ public class Controleur implements ActionListener {
 		{
 			JButton btnClicked = (JButton) parEvt.getSource();
 			if(btnClicked.getText().equals(panelAdmin.getIntitulesMenuCentre()[0])) { // Rechercher Livre
-				// TODO
+				
+				panelRecherche = fenetremereD.getPanelRecherche();
+				panelAdmin.removeAll();
+				panelAdmin.add(panelRecherche);
+				panelAdmin.revalidate();
+				panelAdmin.repaint();
 			}
 			if(btnClicked.getText().equals(panelAdmin.getIntitulesMenuCentre()[1])) { // Gérer Comptes Etudiant
 				// TODO	
