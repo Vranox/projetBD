@@ -44,7 +44,7 @@ public class PanelConnexion extends JPanel{
 	Color blanc = new Color(255,255,255);
 	Color bleu = new Color(4,57,217);
 	//Font
-	Font serif = new Font("Courier", Font.PLAIN, 12);
+	Font serif = new Font("Courier", Font.PLAIN, 13);
 	
 	/**
 	 * Constructeur du panel gérant l'IHM login
@@ -145,9 +145,10 @@ public class PanelConnexion extends JPanel{
 			
 		});
 		LabelFill = new JLabel( );
-		LabelFill.setForeground(violet);
+		LabelFill.setForeground(blanc);
+		LabelFill.setBackground(new Color(255,0,51));
 		LabelFill.setFont(serif);
-		LabelFill.setPreferredSize(new Dimension(40,40));
+		LabelFill.setPreferredSize(new Dimension(30,30));
 		LabelFill2 = new JLabel();
 		LabelFill2.setPreferredSize(new Dimension(30,30));
 		panelLogin2.add(LabelUser, makeGbc(0,0,1,1));
@@ -158,6 +159,7 @@ public class PanelConnexion extends JPanel{
 		panelLogin2.add(pwdSep,makeGbc(1,3,3));
 		gbc = makeGbc(0,4,4,1);
 		gbc.gridwidth = 4;
+		gbc.insets = new Insets(10,0,10,0);
 		panelLogin2.add(LabelFill,gbc);
 		panelLogin2.add(LabelFill2,makeGbc(3,4,1,1));
 		panelLogin2.add(loginBtn,makeGbc(2,5,1,1));

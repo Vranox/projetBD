@@ -13,6 +13,8 @@ public class FenetreMere extends JFrame {
 	PanelAdmin panelAdmin;
 	PanelRecherche panelRecherche;
 	PanelEtudiant panelEtudiant;
+	PanelGestionEtudiant panelGestionEtudiant;
+	PanelMenu panelMenu;
 	public FenetreMere(String parTitre){
 		super(parTitre);
 		if(parTitre.equals("Connection BU")) {
@@ -25,7 +27,8 @@ public class FenetreMere extends JFrame {
 			
 			// ajouter ici les instantiations des panels admin
 			panelRecherche = new PanelRecherche();
-			
+			panelGestionEtudiant = new PanelGestionEtudiant();
+			panelMenu = new PanelMenu();
 			setContentPane(panelAdmin);
 			setSize(1000,800);
 		}
@@ -34,10 +37,24 @@ public class FenetreMere extends JFrame {
 			setContentPane(panelEtudiant);
 			setSize(1000,800);
 		}
+		else if(parTitre.equals("Test")) {
+			panelMenu = new PanelMenu();
+			setContentPane(panelMenu);
+			setSize(1000,800);
+		}
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
 		this.setResizable(false);
 		FenetreMere.centreWindow(this);
+	}
+	public PanelMenu getPanelMenu() {
+		return panelMenu;
+	}
+	public PanelGestionEtudiant getPanelGestionEtudiant() {
+		return panelGestionEtudiant;
+	}
+	public void setPanelGestionEtudiant(PanelGestionEtudiant panelGestionEtudiant) {
+		this.panelGestionEtudiant = panelGestionEtudiant;
 	}
 	public PanelRecherche getPanelRecherche() {
 		return panelRecherche;
@@ -50,9 +67,6 @@ public class FenetreMere extends JFrame {
 	}
 	public PanelConnexion getPanelConnexion() {
 		return panelConnexion;
-	}
-	public void setPanelConnexion(PanelConnexion panelConnexion) {
-		this.panelConnexion = panelConnexion;
 	}
 	public PanelAdmin getPanelAdmin() {
 		return panelAdmin;

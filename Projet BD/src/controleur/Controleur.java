@@ -21,6 +21,8 @@ public class Controleur implements ActionListener {
 	PanelConnexion panelConnexion;
 	PanelAdmin panelAdmin;
 	PanelRecherche panelRecherche;
+	PanelGestionEtudiant panelGestionEtudiant;
+	PanelMenu panelMenu;
 	JButton boutonLogin;
 	String adminId = "a";
 	String adminPwd = "a";
@@ -64,24 +66,31 @@ public class Controleur implements ActionListener {
 				}
 				else {
 					panelConnexion.getLabelFill().setText("Identifiant ou Mot de Passe INCORRECT");
+					panelConnexion.getLabelFill().setOpaque(true);
 				}
 			}catch(Exception e) {
 				System.out.println(e.getMessage());
+				panelConnexion.getLabelFill().setText("Echec de connexion � la BD");
+				panelConnexion.getLabelFill().setOpaque(true);
 			}
 		}
 		else if(Arrays.asList(panelAdmin.getBoutonsMenuCentre()).contains(parEvt.getSource())) // bouton du panelAdmin (ex: rechercher livre, ajouter livre.. ) cliqué 
 		{
 			JButton btnClicked = (JButton) parEvt.getSource();
+			panelMenu = fenetremereD.getPanelMenu();
+			panelAdmin.removeAll();
+			panelAdmin.add(panelMenu);
+			panelAdmin.revalidate();
+			panelAdmin.repaint();
 			if(btnClicked.getText().equals(panelAdmin.getIntitulesMenuCentre()[0])) { // Rechercher Livre
 				
-				panelRecherche = fenetremereD.getPanelRecherche();
-				panelAdmin.removeAll();
-				panelAdmin.add(panelRecherche);
-				panelAdmin.revalidate();
-				panelAdmin.repaint();
+				panelMenu.setCartes(1);
+				
 			}
 			if(btnClicked.getText().equals(panelAdmin.getIntitulesMenuCentre()[1])) { // Gérer Comptes Etudiant
-				// TODO	
+				
+				panelMenu.setCartes(2);
+				
 			}
 			if(btnClicked.getText().equals(panelAdmin.getIntitulesMenuCentre()[2])) { // Ajouter des livres au catalogue
 				// TODO			
