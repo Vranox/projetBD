@@ -20,6 +20,9 @@ public class PanelMenu extends JPanel {
 		panelSide = new JPanel();
 		panelRecherche = new PanelRecherche();
 		panelGestionEtudiant = new PanelGestionEtudiant();
+		panelGestionEtudiant.setPreferredSize(new Dimension(805,800));
+		panelGestionEtudiant.setBackground(orange);
+		panelGestionEtudiant.setOpaque(true);
 		add(panelCartes,BorderLayout.CENTER);
 		add(panelSide,BorderLayout.WEST);
 		//Gestion panelSide
@@ -28,6 +31,8 @@ public class PanelMenu extends JPanel {
 		panelSide.setOpaque(true);
 		//Gestion panelCartes
 		panelCartes.setPreferredSize(new Dimension(805,800));
+		cartesLayout.setHgap(0);
+		cartesLayout.setVgap(0);
 		panelCartes.setLayout(cartesLayout);
 		panelCartes.add(panelRecherche,"Recherche");
 		panelCartes.add(panelGestionEtudiant,"GestionEtudiant");
@@ -41,5 +46,8 @@ public class PanelMenu extends JPanel {
 			cartesLayout.show(panelCartes, "GestionEtudiant");
 			break;
 		}
+	}
+	public PanelGestionEtudiant getPanelGestionEtudiant() {
+		return panelGestionEtudiant;
 	}
 }
