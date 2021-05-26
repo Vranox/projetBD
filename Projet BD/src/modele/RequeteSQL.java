@@ -31,6 +31,7 @@ public class RequeteSQL {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
 		return res;
 	}
 	
