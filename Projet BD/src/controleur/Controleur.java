@@ -30,7 +30,7 @@ public class Controleur implements ActionListener {
 	Connection connection;
 	String email;
 	String pwd;
-	public Controleur(FenetreMere parFenetremere) {
+	public Controleur(FenetreMere parFenetremere) throws SQLException, IOException {
 		fenetremere = parFenetremere;
 		panelConnexion = fenetremere.getPanelConnexion();
 		panelConnexion.enregistreEcouteur(this);
@@ -53,12 +53,16 @@ public class Controleur implements ActionListener {
 				user = new Utilisateur(adminId,adminPwd);
 				System.out.println("success");
 				fenetremere.dispose();
-				fenetremereD= new FenetreMere("Session Admin");
+				try {
+					fenetremereD= new FenetreMere("Session Admin");
+				} catch (SQLException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				panelAdmin = fenetremereD.getPanelAdmin();
 				fenetremereD.getPanelAdmin().enregistreEcouteur(this);
 			}
 			try {
-				new ConnexionBD();
 				connection = ConnexionBD.ConnectFromIUT();
 				Statement stmt = connection.createStatement ();
 				String sql = "SELECT * FROM ETUDIANT WHERE email = '"+email+"' AND mdp='"+pwd+"'";

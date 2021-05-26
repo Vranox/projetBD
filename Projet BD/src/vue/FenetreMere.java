@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.Window;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -15,7 +16,7 @@ public class FenetreMere extends JFrame {
 	PanelEtudiant panelEtudiant;
 	PanelGestionEtudiant panelGestionEtudiant;
 	PanelMenu panelMenu;
-	public FenetreMere(String parTitre){
+	public FenetreMere(String parTitre) throws SQLException, IOException{
 		super(parTitre);
 		if(parTitre.equals("Connection BU")) {
 			panelConnexion = new PanelConnexion();
@@ -26,7 +27,6 @@ public class FenetreMere extends JFrame {
 			panelAdmin = new PanelAdmin();
 			
 			// ajouter ici les instantiations des panels admin
-			panelRecherche = new PanelRecherche();
 			panelGestionEtudiant = new PanelGestionEtudiant();
 			panelMenu = new PanelMenu();
 			setContentPane(panelAdmin);

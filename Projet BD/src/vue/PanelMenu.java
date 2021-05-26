@@ -1,6 +1,8 @@
 package vue;
 
 import java.awt.*;
+import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.swing.JPanel;
 
@@ -14,7 +16,7 @@ public class PanelMenu extends JPanel {
 	Color violet = new Color(64,2,53);
 	Color blanc = new Color(255,255,255);
 	Color bleu = new Color(4,57,217);
-	public PanelMenu() {
+	public PanelMenu() throws SQLException, IOException {
 		setLayout(new BorderLayout());
 		panelCartes = new JPanel();
 		panelSide = new JPanel();
