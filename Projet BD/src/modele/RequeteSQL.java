@@ -21,7 +21,6 @@ public class RequeteSQL {
 	public static int getNumberOfRows(Connection connexion, String table) {
 		int res = 0;
 		try {
-			connexion = ConnexionBD.ConnectFromIUT();
 			Statement stmt = connexion.createStatement();
 			ResultSet rset = stmt.executeQuery("SELECT COUNT(*) FROM " + table);
 			
@@ -29,7 +28,7 @@ public class RequeteSQL {
 				res = rset.getInt("COUNT(*)");
 			}
 			
-		} catch (SQLException | IOException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return res;
@@ -44,7 +43,6 @@ public class RequeteSQL {
 		Livre[] res = new Livre[getNumberOfRows(connexion,"LIVRE")];
 		int index = 0;
 		try {
-			connexion = ConnexionBD.ConnectFromIUT();
 			Statement stmt = connexion.createStatement();
 			ResultSet rset = stmt.executeQuery("SELECT * FROM LIVRE " + options);
 			
@@ -57,7 +55,7 @@ public class RequeteSQL {
 				index++;
 			}
 			
-		} catch (SQLException | IOException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return res;
