@@ -34,6 +34,11 @@ public class Controleur implements ActionListener {
 		fenetremere = parFenetremere;
 		panelConnexion = fenetremere.getPanelConnexion();
 		panelConnexion.enregistreEcouteur(this);
+		//pour les tests
+		fenetremere.dispose();
+		fenetremereD= new FenetreMere("Session Admin");
+		panelAdmin = fenetremereD.getPanelAdmin();
+		fenetremereD.getPanelAdmin().enregistreEcouteur(this);
 	}
 	// Se mettre a l'ecoute du bouton "connexion"
 
@@ -90,7 +95,6 @@ public class Controleur implements ActionListener {
 			if(btnClicked.getText().equals(panelAdmin.getIntitulesMenuCentre()[1])) { // Gérer Comptes Etudiant
 				
 				panelMenu.setCartes(2);
-				
 			}
 			if(btnClicked.getText().equals(panelAdmin.getIntitulesMenuCentre()[2])) { // Ajouter des livres au catalogue
 				// TODO			
