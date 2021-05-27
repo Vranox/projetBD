@@ -108,25 +108,29 @@ public class RequeteSQL {
 			return false;
 		}
 	}
-	public static void ordreTable(Connection connexion,DefaultTableModel tableau,String instru) {
+	public static Etudiant[] getEtudiants(Connection connexion,String options) {
+		Etudiant[] res = new Etudiant[getNumberOfRows(connexion,"ETUDIANT"+options)];
+		int index = 0;
 		try {
- 			Statement stmt = connexion.createStatement();
- 			ResultSet rset=stmt.executeQuery("SELECT * FROM ETUDIANT");
- 			if(instru.equals("normal")){
- 				rset = stmt.executeQuery("SELECT * FROM ETUDIANT");
- 			}
- 			
- 			while(rset.next()) {
- 				int id_et = rset.getInt("id_et");
+			Statement stmt = connexion.createStatement();
+			ResultSet rset = stmt.executeQuery("SELECT * FROM 	 ETUDIANT" + options);
+			
+			while(rset.next()) {
+				//System.out.println("test");
+				String id_et = rset.getString("id_et");
  				String nom = rset.getString("nom");
  				String prenom = rset.getString("prenom");
  				String email = rset.getString("email");
  				String mdp = rset.getString("mdp");
- 				tableau.addRow(new Object[] {id_et,nom,prenom,email,mdp});
- 			}
- 			
- 		} catch (SQLException e) {
- 			e.printStackTrace();
- 		}
+ 				//System.out.println("id: "+id_et+" nom: "+nom+" prenom: "+prenom+" email: "+email+" mdp: "+mdp);
+				
+				res[index] = new Etudiant(id_et,nom,prenom,email,mdp);
+				index++;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return res;
 	}
 }

@@ -12,6 +12,8 @@ import java.sql.*;
 import javax.swing.*;
 
 import modele.ConnexionBD;
+import modele.Etudiant;
+import modele.ModeleEtudiantTable;
 import modele.RequeteSQL;
 import modele.Utilisateur;
 import vue.*;
@@ -26,12 +28,15 @@ public class Controleur implements ActionListener {
 	PanelMenu panelMenu;
 	JButton boutonLogin;
 	JTextField champCherche;
+	JTable tableauEtudiant;
 	String adminId = "a";
 	String adminPwd = "a";
 	Utilisateur user;
 	Connection connection;
 	String email;
 	String pwd;
+	JComboBox<String> comboChoix;
+	Etudiant[] dataEtudiant;
 	public Controleur(FenetreMere parFenetremere, Connection parConnection) throws SQLException, IOException {
 		fenetremere = parFenetremere;
 		connection = parConnection;
@@ -42,7 +47,7 @@ public class Controleur implements ActionListener {
 		panelGestionEtudiant = panelMenu.getPanelGestionEtudiant();
 		panelRecherche = panelMenu.getPanelRecherche();
 		panelGestionEtudiant.enregistreEcouteur(this);
-		panelRecherche.enregistreEcouteur(this);
+		//panelRecherche.enregistreEcouteur(this);
 		panelAdmin.enregistreEcouteur(this);
 		
 		
@@ -73,6 +78,9 @@ public class Controleur implements ActionListener {
 	public void actionPerformed(ActionEvent parEvt) {
 		boutonLogin = panelConnexion.getLoginBtn();
 		champCherche = panelGestionEtudiant.getChampCherche();
+		comboChoix = panelGestionEtudiant.getComboChoix();
+		tableauEtudiant = panelGestionEtudiant.getTableau();
+		
 		if(parEvt.getSource()==boutonLogin) {
 			email = panelConnexion.getEmailTxt().getText();
 			pwd = new String(panelConnexion.getPwdTxt().getPassword());
@@ -123,8 +131,14 @@ public class Controleur implements ActionListener {
 			}
 
 		}
-		else if(parEvt.getSource()==champCherche) {
-			System.out.println("chercheeeeeeeeeeeeeeeee");
+		else if(parEvt.getSource()==champCherche||parEvt.getSource()==comboChoix||parEvt.getSource()==panelGestionEtudiant.getComboTri()) {
+			if(panelGestionEtudiant.getComboTri().getSelectedItem().equals("Ordre Croissant")) {
+				dataEtudiant =RequeteSQL.getEtudiants(connection," WHERE "+comboChoix.getSelectedItem()+" LIKE '"+champCherche.getText()+"%' ORDER BY "+comboChoix.getSelectedItem()+" ASC");
+			}
+			else {
+				dataEtudiant =RequeteSQL.getEtudiants(connection," WHERE "+comboChoix.getSelectedItem()+" LIKE '"+champCherche.getText()+"%' ORDER BY "+comboChoix.getSelectedItem()+" DESC");
+			}
+			panelGestionEtudiant.setData(dataEtudiant);
 		}
 		
 	}
