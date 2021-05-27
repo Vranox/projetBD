@@ -24,10 +24,8 @@ public class FenetreMere extends JFrame {
 			setSize(800,500);
 		}
 		else if(parTitre.equals("Session Admin")) {
-			panelAdmin = new PanelAdmin();
 			
 			// ajouter ici les instantiations des panels admin
-			panelMenu = new PanelMenu(connexion);
 			setContentPane(panelAdmin);
 			setSize(1000,800);
 		}
@@ -41,6 +39,20 @@ public class FenetreMere extends JFrame {
 			setContentPane(panelMenu);
 			setSize(1000,800);
 		}
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setVisible(true);
+		this.setResizable(false);
+		FenetreMere.centreWindow(this);
+	}
+	public FenetreMere(String parTitre,Connection connexion,PanelAdmin parPanelAdmin,PanelMenu parPanelMenu) {
+		super(parTitre);
+		panelAdmin = parPanelAdmin;
+		panelMenu = parPanelMenu;
+		if(parTitre.equals("Session Admin")) {
+					
+					setContentPane(panelAdmin);
+					setSize(1000,800);
+				}
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
 		this.setResizable(false);
@@ -60,6 +72,12 @@ public class FenetreMere extends JFrame {
 	}
 	public PanelAdmin getPanelAdmin() {
 		return panelAdmin;
+	}
+	public void setPanelAdmin(PanelAdmin panelAdmin) {
+		this.panelAdmin = panelAdmin;
+	}
+	public void setPanelMenu(PanelMenu panelMenu) {
+		this.panelMenu = panelMenu;
 	}
 	
 }

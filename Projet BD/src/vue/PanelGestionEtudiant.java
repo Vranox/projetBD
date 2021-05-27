@@ -10,7 +10,12 @@ import java.sql.Statement;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import controleur.Controleur;
 import modele.ConnexionBD;
+import modele.Etudiant;
+import modele.Livre;
+import modele.ModeleEtudiantTable;
+import modele.ModeleLivreTable;
 import modele.RequeteSQL;
 
 public class PanelGestionEtudiant extends JPanel {
@@ -50,7 +55,8 @@ public class PanelGestionEtudiant extends JPanel {
      JPanel panelTable2;
      JPanel panelTri;
      JTable tableau;
-     String[] intitulesTab = {"ID_ET","NOM","PRENOM","EMAIL","MDP"};
+     ModeleEtudiantTable tableauModel;
+     Etudiant[] data;
      Connection connexion;
     
 
@@ -213,7 +219,7 @@ public class PanelGestionEtudiant extends JPanel {
          gridBagConstraints.insets = new Insets(0, 0, 0, 10);
          panelChoix.add(labelChoix, gridBagConstraints);
 
-         comboChoix.setModel(new DefaultComboBoxModel<>(new String[] { "ID", "Nom", "Prenom", "Email" ,"mdp"}));
+         comboChoix.setModel(new DefaultComboBoxModel<>(new String[] { "ID_ET", "NOM", "PRENOM", "EMAIL" ,"MDP"}));
          panelChoix.add(comboChoix, new GridBagConstraints());
 
          gridBagConstraints = new GridBagConstraints();
@@ -256,15 +262,82 @@ public class PanelGestionEtudiant extends JPanel {
          gridBagConstraints.gridy = 0;
          panelRecherche.add(panelTri, gridBagConstraints);
          panelTable2.add(panelRecherche, BorderLayout.NORTH);
+         //tableau
  		tableau = new JTable();
- 		DefaultTableModel tableauModel = new DefaultTableModel();
+ 		data = RequeteSQL.getEtudiants(connexion,"");
+ 		tableauModel = new ModeleEtudiantTable(data);
+		JScrollPane scroll = new JScrollPane(tableau,
+				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		//tableau.setDefaultRenderer(Integer.class,new CelluleRenderer());
+
+		tableau.setModel(tableauModel);
+ 		
+ 		
+ 		/*DefaultTableModel tableauModel = new DefaultTableModel();
  		tableauModel.setColumnIdentifiers(intitulesTab);
  		RequeteSQL.ordreTable(connexion, tableauModel, "normal");
  		
  		tableau.setModel(tableauModel);
- 		jScrollPane1.setViewportView(tableau);
-	    panelTable2.add(jScrollPane1, BorderLayout.CENTER);
+ 		jScrollPane1.setViewportView(tableau);*/
+	    panelTable2.add(scroll, BorderLayout.CENTER);
 	
 	    panelTable.add(panelTable2, new GridBagConstraints());
      }
+	public void setData(Etudiant[] dataEtudiant) {
+		tableau.setModel(new ModeleEtudiantTable(dataEtudiant));
+	}
+	public JPanel getPanelTri() {
+		return panelTri;
+	}
+	public void setPanelTri(JPanel panelTri) {
+		this.panelTri = panelTri;
+	}
+	public JTable getTableau() {
+		return tableau;
+	}
+	public void setTableau(JTable tableau) {
+		this.tableau = tableau;
+	}
+	public void enregistreEcouteur(Controleur parControleur) {
+		champCherche.addActionListener(parControleur);
+		comboChoix.addActionListener(parControleur);
+		comboTri.addActionListener(parControleur);
+	}
+	public JTextField getChampCherche() {
+		return champCherche;
+	}
+	public void setChampCherche(JTextField champCherche) {
+		this.champCherche = champCherche;
+	}
+	public JComboBox<String> getComboChoix() {
+		return comboChoix;
+	}
+	public void setComboChoix(JComboBox<String> comboChoix) {
+		this.comboChoix = comboChoix;
+	}
+	public JComboBox<String> getComboTri() {
+		return comboTri;
+	}
+	public void setComboTri(JComboBox<String> comboTri) {
+		this.comboTri = comboTri;
+	}
+	public JPanel getPanelBouton1() {
+		return panelBouton1;
+	}
+	public void setPanelBouton1(JPanel panelBouton1) {
+		this.panelBouton1 = panelBouton1;
+	}
+	public JPanel getPanelBouton2() {
+		return panelBouton2;
+	}
+	public void setPanelBouton2(JPanel panelBouton2) {
+		this.panelBouton2 = panelBouton2;
+	}
+	public JPanel getPanelBouton3() {
+		return panelBouton3;
+	}
+	public void setPanelBouton3(JPanel panelBouton3) {
+		this.panelBouton3 = panelBouton3;
+	}
 }

@@ -12,6 +12,8 @@ import java.sql.*;
 import javax.swing.*;
 
 import modele.ConnexionBD;
+import modele.Etudiant;
+import modele.ModeleEtudiantTable;
 import modele.RequeteSQL;
 import modele.Utilisateur;
 import vue.*;
@@ -25,28 +27,60 @@ public class Controleur implements ActionListener {
 	PanelGestionEtudiant panelGestionEtudiant;
 	PanelMenu panelMenu;
 	JButton boutonLogin;
+	JTextField champCherche;
+	JTable tableauEtudiant;
 	String adminId = "a";
 	String adminPwd = "a";
 	Utilisateur user;
 	Connection connection;
 	String email;
 	String pwd;
+	JComboBox<String> comboChoix;
+	Etudiant[] dataEtudiant;
 	public Controleur(FenetreMere parFenetremere, Connection parConnection) throws SQLException, IOException {
 		fenetremere = parFenetremere;
 		connection = parConnection;
+		panelMenu = new PanelMenu(connection);
+		panelAdmin = new PanelAdmin();
 		panelConnexion = fenetremere.getPanelConnexion();
 		panelConnexion.enregistreEcouteur(this);
+		panelGestionEtudiant = panelMenu.getPanelGestionEtudiant();
+		panelRecherche = panelMenu.getPanelRecherche();
+		panelGestionEtudiant.enregistreEcouteur(this);
+		//panelRecherche.enregistreEcouteur(this);
+		panelAdmin.enregistreEcouteur(this);
+		
+		
 		//pour les tests
-		/*fenetremere.dispose();
-		fenetremereD= new FenetreMere("Session Admin");
-		panelAdmin = fenetremereD.getPanelAdmin();
-		fenetremereD.getPanelAdmin().enregistreEcouteur(this);*/
+		fenetremere.dispose();
+		fenetremere= new FenetreMere("Session Admin",connection,panelAdmin,panelMenu);
+		fenetremere.getPanelAdmin().enregistreEcouteur(this);
 	}
 	// Se mettre a l'ecoute du bouton "connexion"
+
+	public PanelAdmin getPanelAdmin() {
+		return panelAdmin;
+	}
+
+	public void setPanelAdmin(PanelAdmin panelAdmin) {
+		this.panelAdmin = panelAdmin;
+	}
+
+	public PanelMenu getPanelMenu() {
+		return panelMenu;
+	}
+
+	public void setPanelMenu(PanelMenu panelMenu) {
+		this.panelMenu = panelMenu;
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent parEvt) {
 		boutonLogin = panelConnexion.getLoginBtn();
+		champCherche = panelGestionEtudiant.getChampCherche();
+		comboChoix = panelGestionEtudiant.getComboChoix();
+		tableauEtudiant = panelGestionEtudiant.getTableau();
+		
 		if(parEvt.getSource()==boutonLogin) {
 			email = panelConnexion.getEmailTxt().getText();
 			pwd = new String(panelConnexion.getPwdTxt().getPassword());
@@ -56,19 +90,12 @@ public class Controleur implements ActionListener {
 				user = new Utilisateur(adminId,adminPwd);
 				System.out.println("success");
 				fenetremere.dispose();
-				try {
-					fenetremereD= new FenetreMere("Session Admin",connection);
-				} catch (SQLException | IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				panelAdmin = fenetremereD.getPanelAdmin();
-				fenetremereD.getPanelAdmin().enregistreEcouteur(this);
+				fenetremere= new FenetreMere("Session Admin",connection,panelAdmin,panelMenu);
 			}
 			if(RequeteSQL.isEtudiant(connection,user,panelConnexion)) {
 				fenetremere.dispose();
 				try {
-					fenetremereD = new FenetreMere("Session Etudiant",connection);
+					fenetremere = new FenetreMere("Session Etudiant",connection);
 				} catch (SQLException | IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -82,7 +109,7 @@ public class Controleur implements ActionListener {
 		else if(Arrays.asList(panelAdmin.getBoutonsMenuCentre()).contains(parEvt.getSource())) // bouton du panelAdmin (ex: rechercher livre, ajouter livre.. ) cliqué 
 		{
 			JButton btnClicked = (JButton) parEvt.getSource();
-			panelMenu = fenetremereD.getPanelMenu();
+			panelMenu = fenetremere.getPanelMenu();
 			panelAdmin.removeAll();
 			panelAdmin.add(panelMenu);
 			panelAdmin.revalidate();
@@ -103,6 +130,15 @@ public class Controleur implements ActionListener {
 				// TODO	
 			}
 
+		}
+		else if(parEvt.getSource()==champCherche||parEvt.getSource()==comboChoix||parEvt.getSource()==panelGestionEtudiant.getComboTri()) {
+			if(panelGestionEtudiant.getComboTri().getSelectedItem().equals("Ordre Croissant")) {
+				dataEtudiant =RequeteSQL.getEtudiants(connection," WHERE "+comboChoix.getSelectedItem()+" LIKE '"+champCherche.getText()+"%' ORDER BY "+comboChoix.getSelectedItem()+" ASC");
+			}
+			else {
+				dataEtudiant =RequeteSQL.getEtudiants(connection," WHERE "+comboChoix.getSelectedItem()+" LIKE '"+champCherche.getText()+"%' ORDER BY "+comboChoix.getSelectedItem()+" DESC");
+			}
+			panelGestionEtudiant.setData(dataEtudiant);
 		}
 		
 	}
