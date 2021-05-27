@@ -37,10 +37,10 @@ public class Controleur implements ActionListener {
 		panelConnexion = fenetremere.getPanelConnexion();
 		panelConnexion.enregistreEcouteur(this);
 		//pour les tests
-		/*fenetremere.dispose();
-		fenetremereD= new FenetreMere("Session Admin");
-		panelAdmin = fenetremereD.getPanelAdmin();
-		fenetremereD.getPanelAdmin().enregistreEcouteur(this);*/
+		fenetremere.dispose();
+		fenetremere= new FenetreMere("Session Admin",connection);
+		panelAdmin = fenetremere.getPanelAdmin();
+		fenetremere.getPanelAdmin().enregistreEcouteur(this);
 	}
 	// Se mettre a l'ecoute du bouton "connexion"
 
@@ -57,18 +57,18 @@ public class Controleur implements ActionListener {
 				System.out.println("success");
 				fenetremere.dispose();
 				try {
-					fenetremereD= new FenetreMere("Session Admin",connection);
+					fenetremere= new FenetreMere("Session Admin",connection);
 				} catch (SQLException | IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				panelAdmin = fenetremereD.getPanelAdmin();
-				fenetremereD.getPanelAdmin().enregistreEcouteur(this);
+				panelAdmin = fenetremere.getPanelAdmin();
+				fenetremere.getPanelAdmin().enregistreEcouteur(this);
 			}
 			if(RequeteSQL.isEtudiant(connection,user,panelConnexion)) {
 				fenetremere.dispose();
 				try {
-					fenetremereD = new FenetreMere("Session Etudiant",connection);
+					fenetremere = new FenetreMere("Session Etudiant",connection);
 				} catch (SQLException | IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -82,7 +82,7 @@ public class Controleur implements ActionListener {
 		else if(Arrays.asList(panelAdmin.getBoutonsMenuCentre()).contains(parEvt.getSource())) // bouton du panelAdmin (ex: rechercher livre, ajouter livre.. ) cliqué 
 		{
 			JButton btnClicked = (JButton) parEvt.getSource();
-			panelMenu = fenetremereD.getPanelMenu();
+			panelMenu = fenetremere.getPanelMenu();
 			panelAdmin.removeAll();
 			panelAdmin.add(panelMenu);
 			panelAdmin.revalidate();
