@@ -10,6 +10,7 @@ import java.sql.Statement;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import controleur.Controleur;
 import modele.ConnexionBD;
 import modele.RequeteSQL;
 
@@ -267,4 +268,43 @@ public class PanelGestionEtudiant extends JPanel {
 	
 	    panelTable.add(panelTable2, new GridBagConstraints());
      }
+	public void enregistreEcouteur(Controleur parControleur) {
+		champCherche.addActionListener(parControleur);
+	}
+	public JTextField getChampCherche() {
+		return champCherche;
+	}
+	public void setChampCherche(JTextField champCherche) {
+		this.champCherche = champCherche;
+	}
+	public JComboBox<String> getComboChoix() {
+		return comboChoix;
+	}
+	public void setComboChoix(JComboBox<String> comboChoix) {
+		this.comboChoix = comboChoix;
+	}
+	public JComboBox<String> getComboTri() {
+		return comboTri;
+	}
+	public void setComboTri(JComboBox<String> comboTri) {
+		this.comboTri = comboTri;
+	}
+	public JPanel getPanelBouton1() {
+		return panelBouton1;
+	}
+	public void setPanelBouton1(JPanel panelBouton1) {
+		this.panelBouton1 = panelBouton1;
+	}
+	public JPanel getPanelBouton2() {
+		return panelBouton2;
+	}
+	public void setPanelBouton2(JPanel panelBouton2) {
+		this.panelBouton2 = panelBouton2;
+	}
+	public JPanel getPanelBouton3() {
+		return panelBouton3;
+	}
+	public void setPanelBouton3(JPanel panelBouton3) {
+		this.panelBouton3 = panelBouton3;
+	}
 }

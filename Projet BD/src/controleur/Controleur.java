@@ -25,6 +25,7 @@ public class Controleur implements ActionListener {
 	PanelGestionEtudiant panelGestionEtudiant;
 	PanelMenu panelMenu;
 	JButton boutonLogin;
+	JTextField champCherche;
 	String adminId = "a";
 	String adminPwd = "a";
 	Utilisateur user;
@@ -34,19 +35,44 @@ public class Controleur implements ActionListener {
 	public Controleur(FenetreMere parFenetremere, Connection parConnection) throws SQLException, IOException {
 		fenetremere = parFenetremere;
 		connection = parConnection;
+		panelMenu = new PanelMenu(connection);
+		panelAdmin = new PanelAdmin();
 		panelConnexion = fenetremere.getPanelConnexion();
 		panelConnexion.enregistreEcouteur(this);
+		panelGestionEtudiant = panelMenu.getPanelGestionEtudiant();
+		panelRecherche = panelMenu.getPanelRecherche();
+		panelGestionEtudiant.enregistreEcouteur(this);
+		panelRecherche.enregistreEcouteur(this);
+		panelAdmin.enregistreEcouteur(this);
+		
+		
 		//pour les tests
 		fenetremere.dispose();
-		fenetremere= new FenetreMere("Session Admin",connection);
-		panelAdmin = fenetremere.getPanelAdmin();
+		fenetremere= new FenetreMere("Session Admin",connection,panelAdmin,panelMenu);
 		fenetremere.getPanelAdmin().enregistreEcouteur(this);
 	}
 	// Se mettre a l'ecoute du bouton "connexion"
 
+	public PanelAdmin getPanelAdmin() {
+		return panelAdmin;
+	}
+
+	public void setPanelAdmin(PanelAdmin panelAdmin) {
+		this.panelAdmin = panelAdmin;
+	}
+
+	public PanelMenu getPanelMenu() {
+		return panelMenu;
+	}
+
+	public void setPanelMenu(PanelMenu panelMenu) {
+		this.panelMenu = panelMenu;
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent parEvt) {
 		boutonLogin = panelConnexion.getLoginBtn();
+		champCherche = panelGestionEtudiant.getChampCherche();
 		if(parEvt.getSource()==boutonLogin) {
 			email = panelConnexion.getEmailTxt().getText();
 			pwd = new String(panelConnexion.getPwdTxt().getPassword());
@@ -56,14 +82,7 @@ public class Controleur implements ActionListener {
 				user = new Utilisateur(adminId,adminPwd);
 				System.out.println("success");
 				fenetremere.dispose();
-				try {
-					fenetremere= new FenetreMere("Session Admin",connection);
-				} catch (SQLException | IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				panelAdmin = fenetremere.getPanelAdmin();
-				fenetremere.getPanelAdmin().enregistreEcouteur(this);
+				fenetremere= new FenetreMere("Session Admin",connection,panelAdmin,panelMenu);
 			}
 			if(RequeteSQL.isEtudiant(connection,user,panelConnexion)) {
 				fenetremere.dispose();
@@ -103,6 +122,9 @@ public class Controleur implements ActionListener {
 				// TODO	
 			}
 
+		}
+		else if(parEvt.getSource()==champCherche) {
+			System.out.println("chercheeeeeeeeeeeeeeeee");
 		}
 		
 	}
