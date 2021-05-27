@@ -2,6 +2,7 @@ package vue;
 
 import java.awt.*;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.swing.JPanel;
@@ -16,12 +17,12 @@ public class PanelMenu extends JPanel {
 	Color violet = new Color(64,2,53);
 	Color blanc = new Color(255,255,255);
 	Color bleu = new Color(4,57,217);
-	public PanelMenu() throws SQLException, IOException {
+	public PanelMenu(Connection connexion) throws SQLException, IOException {
 		setLayout(new BorderLayout());
 		panelCartes = new JPanel();
 		panelSide = new JPanel();
-		panelRecherche = new PanelRecherche();
-		panelGestionEtudiant = new PanelGestionEtudiant();
+		panelRecherche = new PanelRecherche(connexion);
+		panelGestionEtudiant = new PanelGestionEtudiant(connexion);
 		panelGestionEtudiant.setPreferredSize(new Dimension(805,800));
 		panelGestionEtudiant.setBackground(orange);
 		panelGestionEtudiant.setOpaque(true);
@@ -48,6 +49,9 @@ public class PanelMenu extends JPanel {
 			cartesLayout.show(panelCartes, "GestionEtudiant");
 			break;
 		}
+	}
+	public PanelRecherche getPanelRecherche() {
+		return panelRecherche;
 	}
 	public PanelGestionEtudiant getPanelGestionEtudiant() {
 		return panelGestionEtudiant;

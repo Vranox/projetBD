@@ -12,6 +12,7 @@ import java.sql.*;
 import javax.swing.*;
 
 import modele.ConnexionBD;
+import modele.RequeteSQL;
 import modele.Utilisateur;
 import vue.*;
 
@@ -30,15 +31,16 @@ public class Controleur implements ActionListener {
 	Connection connection;
 	String email;
 	String pwd;
-	public Controleur(FenetreMere parFenetremere) throws SQLException, IOException {
+	public Controleur(FenetreMere parFenetremere, Connection parConnection) throws SQLException, IOException {
 		fenetremere = parFenetremere;
+		connection = parConnection;
 		panelConnexion = fenetremere.getPanelConnexion();
 		panelConnexion.enregistreEcouteur(this);
 		//pour les tests
-		fenetremere.dispose();
+		/*fenetremere.dispose();
 		fenetremereD= new FenetreMere("Session Admin");
 		panelAdmin = fenetremereD.getPanelAdmin();
-		fenetremereD.getPanelAdmin().enregistreEcouteur(this);
+		fenetremereD.getPanelAdmin().enregistreEcouteur(this);*/
 	}
 	// Se mettre a l'ecoute du bouton "connexion"
 
@@ -48,13 +50,14 @@ public class Controleur implements ActionListener {
 		if(parEvt.getSource()==boutonLogin) {
 			email = panelConnexion.getEmailTxt().getText();
 			pwd = new String(panelConnexion.getPwdTxt().getPassword());
+			user = new Utilisateur(email,pwd);
 			System.out.println("email: "+email+" pwd: "+pwd);
 			if(email.equals(adminId) && pwd.equals(adminPwd)) {
 				user = new Utilisateur(adminId,adminPwd);
 				System.out.println("success");
 				fenetremere.dispose();
 				try {
-					fenetremereD= new FenetreMere("Session Admin");
+					fenetremereD= new FenetreMere("Session Admin",connection);
 				} catch (SQLException | IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -62,24 +65,17 @@ public class Controleur implements ActionListener {
 				panelAdmin = fenetremereD.getPanelAdmin();
 				fenetremereD.getPanelAdmin().enregistreEcouteur(this);
 			}
-			try {
-				connection = ConnexionBD.ConnectFromIUT();
-				Statement stmt = connection.createStatement ();
-				String sql = "SELECT * FROM ETUDIANT WHERE email = '"+email+"' AND mdp='"+pwd+"'";
-				ResultSet rset = stmt.executeQuery(sql);
-				if(rset.next()) {
-					user = new Utilisateur(email,pwd);
-					System.out.println("success");
-					fenetremere.dispose();
-					fenetremereD = new FenetreMere("Session Etudiant");
+			if(RequeteSQL.isEtudiant(connection,user,panelConnexion)) {
+				fenetremere.dispose();
+				try {
+					fenetremereD = new FenetreMere("Session Etudiant",connection);
+				} catch (SQLException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				else {
-					panelConnexion.getLabelFill().setText("Identifiant ou Mot de Passe INCORRECT");
-					panelConnexion.getLabelFill().setOpaque(true);
-				}
-			}catch(Exception e) {
-				System.out.println(e.getMessage());
-				panelConnexion.getLabelFill().setText("Echec de connexion à la BD");
+			}
+			else {
+				panelConnexion.getLabelFill().setText("Identifiant ou Mot de Passe INCORRECT");
 				panelConnexion.getLabelFill().setOpaque(true);
 			}
 		}
@@ -110,6 +106,9 @@ public class Controleur implements ActionListener {
 		}
 		
 	}
+
+
+	
 	
 	// changer le contentPane de la fenetre mere en fonction du type d'utilisateur.
 }

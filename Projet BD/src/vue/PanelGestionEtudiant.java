@@ -11,8 +11,14 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import modele.ConnexionBD;
+import modele.RequeteSQL;
 
 public class PanelGestionEtudiant extends JPanel {
+	ImageIcon imageLogo = new ImageIcon("images/log.png");
+	ImageIcon imageRecherche = new ImageIcon("images/recherche.png");
+	ImageIcon imageSupprimer = new ImageIcon("images/supprimer.png");
+	ImageIcon imageModifier = new ImageIcon("images/modifier.png");
+	ImageIcon imageAjouter = new ImageIcon("images/ajouter.png");
 	 JTextField champCherche;
      JComboBox<String> comboChoix;
      JComboBox<String> comboTri;
@@ -45,26 +51,30 @@ public class PanelGestionEtudiant extends JPanel {
      JPanel panelTri;
      JTable tableau;
      String[] intitulesTab = {"ID_ET","NOM","PRENOM","EMAIL","MDP"};
+     Connection connexion;
     
-     public PanelGestionEtudiant() {
-    	 GridBagConstraints gridBagConstraints;
 
+
+	public PanelGestionEtudiant(Connection parConnexion) throws SQLException, IOException {
+    	 GridBagConstraints gridBagConstraints;
+    	 
+    	 connexion = parConnexion;
          jTextField2 = new JTextField();
          panelGestionEtudiant = new JPanel();
          panelHead = new JPanel();
          panelLogo = new JPanel();
-         jLabel5 = new JLabel();
+         jLabel5 = new JLabel(imageLogo);
          labelTitre = new JLabel();
          labelFill1 = new JPanel();
          panelDroit = new JPanel();
          panelBouton1 = new JPanel();
-         labelSupImg = new JLabel();
+         labelSupImg = new JLabel(imageSupprimer);
          labelSup = new JLabel();
          panelBouton2 = new JPanel();
-         labelModImg = new JLabel();
+         labelModImg = new JLabel(imageModifier);
          labelMod = new JLabel();
          panelBouton3 = new JPanel();
-         labelAjImg = new JLabel();
+         labelAjImg = new JLabel(imageAjouter);
          labelAj = new JLabel();
          panelTable = new JPanel();
          panelTable2 = new JPanel();
@@ -73,7 +83,7 @@ public class PanelGestionEtudiant extends JPanel {
          labelChoix = new JLabel();
          comboChoix = new JComboBox<>();
          panelCherche = new JPanel();
-         imageCherche = new JLabel();
+         imageCherche = new JLabel(imageRecherche);
          champCherche = new JTextField();
          panelTri = new JPanel();
          labelTri = new JLabel();
@@ -93,7 +103,6 @@ public class PanelGestionEtudiant extends JPanel {
          panelLogo.setPreferredSize(new Dimension(150, 100));
          panelLogo.setLayout(new GridBagLayout());
 
-         jLabel5.setText("LOGO");
          panelLogo.add(jLabel5, new GridBagConstraints());
          panelHead.add(panelLogo);
 
@@ -117,7 +126,6 @@ public class PanelGestionEtudiant extends JPanel {
          panelBouton1.setLayout(new GridBagLayout());
 
          labelSupImg.setForeground(new Color(255, 255, 255));
-         labelSupImg.setText("image");
          gridBagConstraints = new GridBagConstraints();
          gridBagConstraints.gridx = 0;
          gridBagConstraints.gridy = 0;
@@ -142,7 +150,6 @@ public class PanelGestionEtudiant extends JPanel {
          panelBouton2.setLayout(new GridBagLayout());
 
          labelModImg.setForeground(new Color(255, 255, 255));
-         labelModImg.setText("logo");
          gridBagConstraints = new GridBagConstraints();
          gridBagConstraints.gridx = 0;
          gridBagConstraints.gridy = 0;
@@ -167,7 +174,6 @@ public class PanelGestionEtudiant extends JPanel {
          panelBouton3.setLayout(new GridBagLayout());
 
          labelAjImg.setForeground(new Color(255, 255, 255));
-         labelAjImg.setText("image");
          gridBagConstraints = new GridBagConstraints();
          gridBagConstraints.gridx = 0;
          gridBagConstraints.gridy = 0;
@@ -220,7 +226,6 @@ public class PanelGestionEtudiant extends JPanel {
          panelCherche.setLayout(new GridBagLayout());
 
          imageCherche.setForeground(new Color(255, 255, 255));
-         imageCherche.setText("jLabel3");
          gridBagConstraints = new GridBagConstraints();
          gridBagConstraints.insets = new Insets(0, 0, 0, 10);
          panelCherche.add(imageCherche, gridBagConstraints);
@@ -251,30 +256,10 @@ public class PanelGestionEtudiant extends JPanel {
          gridBagConstraints.gridy = 0;
          panelRecherche.add(panelTri, gridBagConstraints);
          panelTable2.add(panelRecherche, BorderLayout.NORTH);
-
-         Connection connexion;
  		tableau = new JTable();
  		DefaultTableModel tableauModel = new DefaultTableModel();
  		tableauModel.setColumnIdentifiers(intitulesTab);
- 		
- 		try {
- 			connexion = ConnexionBD.ConnectFromIUT();
- 			Statement stmt = connexion.createStatement();
- 			ResultSet rset = stmt.executeQuery("SELECT * FROM ETUDIANT");
- 			
- 			while(rset.next()) {
- 				int id_et = rset.getInt("id_et");
- 				String nom = rset.getString("nom");
- 				String prenom = rset.getString("prenom");
- 				String email = rset.getString("email");
- 				String mdp = rset.getString("mdp");
- 				tableauModel.addRow(new Object[] {id_et,nom,prenom,email,mdp});
- 			}
- 			
- 		} catch (SQLException | IOException e) {
- 			e.printStackTrace();
- 		}
- 		
+ 		RequeteSQL.ordreTable(connexion, tableauModel, "normal");
  		
  		tableau.setModel(tableauModel);
  		jScrollPane1.setViewportView(tableau);

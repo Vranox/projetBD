@@ -16,7 +16,7 @@ public class FenetreMere extends JFrame {
 	PanelEtudiant panelEtudiant;
 	PanelGestionEtudiant panelGestionEtudiant;
 	PanelMenu panelMenu;
-	public FenetreMere(String parTitre) throws SQLException, IOException{
+	public FenetreMere(String parTitre,Connection connexion) throws SQLException, IOException{
 		super(parTitre);
 		if(parTitre.equals("Connection BU")) {
 			panelConnexion = new PanelConnexion();
@@ -27,8 +27,7 @@ public class FenetreMere extends JFrame {
 			panelAdmin = new PanelAdmin();
 			
 			// ajouter ici les instantiations des panels admin
-			panelGestionEtudiant = new PanelGestionEtudiant();
-			panelMenu = new PanelMenu();
+			panelMenu = new PanelMenu(connexion);
 			setContentPane(panelAdmin);
 			setSize(1000,800);
 		}
@@ -38,7 +37,7 @@ public class FenetreMere extends JFrame {
 			setSize(1000,800);
 		}
 		else if(parTitre.equals("Test")) {
-			panelMenu = new PanelMenu();
+			panelMenu = new PanelMenu(connexion);
 			setContentPane(panelMenu);
 			setSize(1000,800);
 		}
@@ -49,15 +48,6 @@ public class FenetreMere extends JFrame {
 	}
 	public PanelMenu getPanelMenu() {
 		return panelMenu;
-	}
-	public PanelGestionEtudiant getPanelGestionEtudiant() {
-		return panelGestionEtudiant;
-	}
-	public void setPanelGestionEtudiant(PanelGestionEtudiant panelGestionEtudiant) {
-		this.panelGestionEtudiant = panelGestionEtudiant;
-	}
-	public PanelRecherche getPanelRecherche() {
-		return panelRecherche;
 	}
 	public static void centreWindow(Window frame) {
 	    Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();

@@ -46,11 +46,13 @@ public class PanelRecherche extends JPanel{
 	String[] exemplairesLivre;
 	JComboBox comboBox;
 	JLabel titreLivre ;
+	Connection connexion;
 	
-	public PanelRecherche() throws SQLException, IOException {
+	public PanelRecherche(Connection parConnexion) throws SQLException, IOException {
 		setLayout(new BorderLayout());
 		
-		Connection connexion = ConnexionBD.ConnectFromIUT();
+		
+		connexion = parConnexion;
 		tableau = new JTable();
 		ModeleLivreTable tableauModel;
 		Livre[] data;

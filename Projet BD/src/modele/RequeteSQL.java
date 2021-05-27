@@ -6,13 +6,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.swing.table.DefaultTableModel;
+
+import vue.FenetreMere;
+import vue.PanelConnexion;
+
 /**
  * Cette classe permet d'utiliser des fonctions java classiques pour executer des requetes SQL
  * @author superpaupaul
  *
  */
 public class RequeteSQL {
-
+	
 	/**
 	 * Permet d'obtenir le nombre de tuples dans une table donn√©e
 	 * @param connexion
@@ -82,5 +87,46 @@ public class RequeteSQL {
 			
 		} catch (SQLException e) {e.printStackTrace();}
 		return res;
+	}
+	
+	public static boolean isEtudiant(Connection connexion, Utilisateur user,PanelConnexion panel) {
+		try {
+			Statement stmt = connexion.createStatement ();
+			String sql = "SELECT * FROM ETUDIANT WHERE email = '"+user.username+"' AND mdp='"+user.password+"'";
+			ResultSet rset = stmt.executeQuery(sql);
+			if(rset.next()) {
+				System.out.println("success");
+				return true;
+			}
+			else {
+				return false;
+			}
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+			panel.getLabelFill().setText("Echec de connexion ‡ la BD");
+			panel.getLabelFill().setOpaque(true);
+			return false;
+		}
+	}
+	public static void ordreTable(Connection connexion,DefaultTableModel tableau,String instru) {
+		try {
+ 			Statement stmt = connexion.createStatement();
+ 			ResultSet rset=stmt.executeQuery("SELECT * FROM ETUDIANT");
+ 			if(instru.equals("normal")){
+ 				rset = stmt.executeQuery("SELECT * FROM ETUDIANT");
+ 			}
+ 			
+ 			while(rset.next()) {
+ 				int id_et = rset.getInt("id_et");
+ 				String nom = rset.getString("nom");
+ 				String prenom = rset.getString("prenom");
+ 				String email = rset.getString("email");
+ 				String mdp = rset.getString("mdp");
+ 				tableau.addRow(new Object[] {id_et,nom,prenom,email,mdp});
+ 			}
+ 			
+ 		} catch (SQLException e) {
+ 			e.printStackTrace();
+ 		}
 	}
 }

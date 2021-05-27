@@ -5,11 +5,12 @@ package modele;
  *
  */
 public class Utilisateur {
-	private String username;
-	private String password;
+	String username;
+	String password;
 	
-	public Utilisateur(String username, String password){
-			//TODO
+	public Utilisateur(String parUsername, String parPassword){
+			username = parUsername;
+			password = parPassword;
 		}
 
 	public String getUsername() {
