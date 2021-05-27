@@ -1,6 +1,7 @@
 package vue;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -125,6 +126,9 @@ public class PanelRecherche extends JPanel{
 		pretBtn = new JButton("Prêter");
 		comboBox = new JComboBox(exemplairesLivre);
 		
+		updateEmpruntLabel();
+		updateReservLabel();
+		
 		c = new GridBagConstraints();
 		
 		c.gridx = 0; c.gridy = 0;
@@ -191,7 +195,21 @@ public class PanelRecherche extends JPanel{
 		tableau.getColumnModel().getColumn(2).setPreferredWidth(150);
 	}
 	
-	public void checkEmprunt(int id_ex) {
+	public void updateEmpruntLabel() {
+		String id_ex = (String) comboBox.getSelectedItem();
+		int id = RequeteSQL.whoEmprunted(connexion,id_ex);
+		isEmprunte.setOpaque(true);
+		if(id == -1) {
+			isEmprunte.setBackground(Color.GREEN);
+			isEmprunte.setOpaque(true);
+		}
+		else {
+			isEmprunte.setBackground(Color.RED);
+			isEmprunte.setText("Emprunté par l'étudiant n°" + id);
+		}
+	}
+	
+	public void updateReservLabel() {
 		
 	}
 

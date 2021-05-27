@@ -130,11 +130,39 @@ public class RequeteSQL {
  		}
 	}
 	
+	/**
+	 * fonction qui renvoie -1 si l'exemplaire n'est pas emprunté et l'id de l'etudiant s'il l'est pas
+	 * @param connexion
+	 * @param id_ex
+	 * @return
+	 */
 	public static int whoEmprunted(Connection connexion, String id_ex) {
 		int res = -1;
 		try {
  			Statement stmt = connexion.createStatement();
- 			ResultSet rset=stmt.executeQuery("SELECT * FROM EMPRUNT WHERE ID_EX = " + id_ex);
+ 			ResultSet rset=stmt.executeQuery("SELECT * FROM EMPRUNT WHERE ID_EX = " + id_ex + " AND (sysDate BETWEEN DATE_EMP AND DATE_RETOUR)");
+ 			
+ 			while(rset.next()) {
+ 				res = rset.getInt("ID_ET");
+ 			}
+ 			
+ 		} catch (SQLException e) {
+ 			e.printStackTrace();
+ 		}
+		return res;
+	}
+	
+	/**
+	 * Fonction qui renvoie -1 si l'exemplaire est n'est pas reservé et l'id de l'etudiant s'il l'est
+	 * @param connexion
+	 * @param id_livre
+	 * @return
+	 */
+	public static int whoReserved(Connection connexion, String id_livre) {
+		int res = -1;
+		try {
+ 			Statement stmt = connexion.createStatement();
+ 			ResultSet rset=stmt.executeQuery("SELECT * FROM RESERV WHERE ID_LIVRE = " + id_livre + " AND (sysDate BETWEEN DATE_RES AND DATE_FIN_RES)");
  			
  			while(rset.next()) {
  				res = rset.getInt("ID_ET");
