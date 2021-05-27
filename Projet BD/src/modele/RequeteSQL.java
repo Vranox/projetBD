@@ -103,7 +103,7 @@ public class RequeteSQL {
 			}
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
-			panel.getLabelFill().setText("Echec de connexion à la BD");
+			panel.getLabelFill().setText("Echec de connexion ï¿½ la BD");
 			panel.getLabelFill().setOpaque(true);
 			return false;
 		}
@@ -128,5 +128,21 @@ public class RequeteSQL {
  		} catch (SQLException e) {
  			e.printStackTrace();
  		}
+	}
+	
+	public static int whoEmprunted(Connection connexion, String id_ex) {
+		int res = -1;
+		try {
+ 			Statement stmt = connexion.createStatement();
+ 			ResultSet rset=stmt.executeQuery("SELECT * FROM EMPRUNT WHERE ID_EX = " + id_ex);
+ 			
+ 			while(rset.next()) {
+ 				res = rset.getInt("ID_ET");
+ 			}
+ 			
+ 		} catch (SQLException e) {
+ 			e.printStackTrace();
+ 		}
+		return res;
 	}
 }

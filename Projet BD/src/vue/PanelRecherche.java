@@ -167,6 +167,8 @@ public class PanelRecherche extends JPanel{
 		Livre[] res = RequeteSQL.getBooks(connexion,options);
 		initTable(res);
 	}
+	
+	
 
 	/**
 	 * Permet d'initialiser la table avec une liste de livres en entrée
@@ -187,6 +189,10 @@ public class PanelRecherche extends JPanel{
 		tableau.setModel(tableauModel);
 		tableau.getColumnModel().getColumn(1).setPreferredWidth(127);
 		tableau.getColumnModel().getColumn(2).setPreferredWidth(150);
+	}
+	
+	public void checkEmprunt(int id_ex) {
+		
 	}
 
 	public JTextArea getSearchBar() {
