@@ -55,6 +55,9 @@ public class PanelRecherche extends JPanel{
 	ModeleLivreTable tableauModel;
 	Connection connexion;
 	JScrollPane scroll;
+	Livre[] data;
+	JPanel panelGauche = new JPanel(new GridBagLayout());
+	JPanel panelDroite = new JPanel(new GridBagLayout());
 	
 	public PanelRecherche(Connection connexion) throws SQLException, IOException {
 		setLayout(new BorderLayout());
@@ -62,10 +65,9 @@ public class PanelRecherche extends JPanel{
 		this.connexion = connexion;
 		tableau = new JTable();
 		
-		Livre[] data;
+		
 		int counter = 0;
-		JPanel panelGauche = new JPanel(new GridBagLayout());
-		JPanel panelDroite = new JPanel(new GridBagLayout());
+		
 		GridBagConstraints c = new GridBagConstraints();
 		
 		
@@ -78,7 +80,7 @@ public class PanelRecherche extends JPanel{
 		
 		data = RequeteSQL.getBooks(connexion,"");
 		
-		initTable(data);
+		
 		
 		
 		
@@ -99,6 +101,7 @@ public class PanelRecherche extends JPanel{
 		c.gridx = 2; c.gridy = 0;
 		panelGauche.add(btnRecherche,c);
 		
+		initTable();
 		c.gridx = 0; c.gridy = 1;
 		c.gridwidth = 3;
 		scroll.setPreferredSize(new Dimension(370,700));
@@ -167,9 +170,11 @@ public class PanelRecherche extends JPanel{
 	 * Permet de rechercher des livres dans la base de données en fonction du filtre et de l'entrée
 	 */
 	public void search() {
-		String options = "WHERE " + ((String) filtresBox.getSelectedItem()).toUpperCase() + " LIKE '%" + searchBar.getText() + "'%";
-		Livre[] res = RequeteSQL.getBooks(connexion,options);
-		initTable(res);
+		String options = "WHERE " + ((String) filtresBox.getSelectedItem()).toUpperCase() + " LIKE '%" + searchBar.getText() + "%'";
+		data = RequeteSQL.getBooks(connexion,options);
+		tableau.setModel(new ModeleLivreTable(data));
+		tableau.getColumnModel().getColumn(1).setPreferredWidth(127);
+		tableau.getColumnModel().getColumn(2).setPreferredWidth(150);
 	}
 	
 	
@@ -178,8 +183,7 @@ public class PanelRecherche extends JPanel{
 	 * Permet d'initialiser la table avec une liste de livres en entrée
 	 * @param data
 	 */
-	public void initTable(Livre[] data) {
-		tableauModel = new ModeleLivreTable(data);
+	public void initTable() {
 		tableau.getTableHeader().setResizingAllowed(true);
 		tableau.getTableHeader().setReorderingAllowed(false);
 		tableau.setRowHeight(20);
@@ -190,9 +194,10 @@ public class PanelRecherche extends JPanel{
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		//tableau.setDefaultRenderer(Integer.class,new CelluleRenderer());
 
-		tableau.setModel(tableauModel);
+		tableau.setModel(new ModeleLivreTable(data));
 		tableau.getColumnModel().getColumn(1).setPreferredWidth(127);
 		tableau.getColumnModel().getColumn(2).setPreferredWidth(150);
+		
 	}
 	
 	public void updateEmpruntLabel() {
@@ -201,7 +206,6 @@ public class PanelRecherche extends JPanel{
 		isEmprunte.setOpaque(true);
 		if(id == -1) {
 			isEmprunte.setBackground(Color.GREEN);
-			isEmprunte.setOpaque(true);
 		}
 		else {
 			isEmprunte.setBackground(Color.RED);
@@ -210,7 +214,17 @@ public class PanelRecherche extends JPanel{
 	}
 	
 	public void updateReservLabel() {
-		
+		String id_livre = String.valueOf(currentBook.getId_livre());
+		int id_et = RequeteSQL.whoReserved(connexion, id_livre);
+		isReserve.setOpaque(true);
+		if(id_et == -1) {
+			isReserve.setBackground(Color.GREEN);
+			isReserve.setText("Livre non reservé");
+		}
+		else {
+			isReserve.setBackground(Color.RED);
+			isReserve.setText("Réservé par l'étudiant n°" + id_et);
+		}
 	}
 
 	public JTextArea getSearchBar() {

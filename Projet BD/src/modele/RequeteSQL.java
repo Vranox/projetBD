@@ -46,10 +46,11 @@ public class RequeteSQL {
 	 * @return
 	 */
 	public static Livre[] getBooks(Connection connexion,String options) {
-		Livre[] res = new Livre[getNumberOfRows(connexion,"LIVRE")];
+		Livre[] res = new Livre[getNumberOfRows(connexion,"LIVRE " + options)];
 		int index = 0;
 		try {
 			Statement stmt = connexion.createStatement();
+			//System.out.println("SELECT * FROM LIVRE " + options);
 			ResultSet rset = stmt.executeQuery("SELECT * FROM LIVRE " + options);
 			
 			while(rset.next()) {

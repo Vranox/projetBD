@@ -47,7 +47,7 @@ public class Controleur implements ActionListener {
 		panelGestionEtudiant = panelMenu.getPanelGestionEtudiant();
 		panelRecherche = panelMenu.getPanelRecherche();
 		panelGestionEtudiant.enregistreEcouteur(this);
-		//panelRecherche.enregistreEcouteur(this);
+		panelRecherche.enregistreEcouteur(this);
 		panelAdmin.enregistreEcouteur(this);
 		
 		
@@ -139,6 +139,10 @@ public class Controleur implements ActionListener {
 				dataEtudiant =RequeteSQL.getEtudiants(connection," WHERE "+comboChoix.getSelectedItem()+" LIKE '"+champCherche.getText()+"%' ORDER BY "+comboChoix.getSelectedItem()+" DESC");
 			}
 			panelGestionEtudiant.setData(dataEtudiant);
+		}
+		
+		else if(parEvt.getSource() == panelRecherche.getBtnRecherche()) {
+			panelRecherche.search();
 		}
 		
 	}
