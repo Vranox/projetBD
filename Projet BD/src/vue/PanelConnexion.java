@@ -101,14 +101,14 @@ public class PanelConnexion extends JPanel{
 		
 		LabelUser = new JLabel(iconeUser);
 		LabelCadenas = new JLabel(iconeCadenas);
-		emailTxt = new HintTextField("Email");
+		emailTxt = new HintTextField("Email",blanc);
 		emailTxt.setBackground(orange);
 		emailTxt.setForeground(blanc);
 		emailTxt.setBorder(null);
 		emailSep = new JSeparator();
 		emailSep.setOrientation(SwingConstants.HORIZONTAL);
 		emailSep.setForeground(blanc);
-		pwdTxt = new HintPasswordField("Password");
+		pwdTxt = new HintPasswordField("Password",blanc);
 		pwdTxt.setBackground(orange);
 		pwdTxt.setForeground(blanc);
 		pwdTxt.setBorder(null);
@@ -163,7 +163,6 @@ public class PanelConnexion extends JPanel{
 		panelLogin2.add(LabelFill,gbc);
 		panelLogin2.add(LabelFill2,makeGbc(3,4,1,1));
 		panelLogin2.add(loginBtn,makeGbc(2,5,1,1));
-		
 		
 		
 	}

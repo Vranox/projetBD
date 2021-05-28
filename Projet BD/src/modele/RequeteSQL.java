@@ -133,4 +133,18 @@ public class RequeteSQL {
 		}
 		return res;
 	}
+	public static  void deleteEtudiant(Connection connexion,String id) throws SQLException {
+			Statement stmt = connexion.createStatement();
+			stmt.executeUpdate("DELETE FROM ETUDIANT WHERE ID_ET = '"+id+"'" );
+	}
+	public static void addEtudiant(Connection connexion, String nom,String prenom,String email,String mdp) throws SQLException {
+		Statement stmt = connexion.createStatement();
+		stmt.executeUpdate("INSERT INTO ETUDIANT (nom,prenom,email,mdp) VALUES ('"+nom+"', '"+prenom+"','"+email+"','"+mdp+"')" );
+	}
+	public static void editEtudiant(Connection connexion, String nom, String prenom, String email,String mdp, String id_et) throws SQLException {
+		Statement stmt = connexion.createStatement();
+		stmt.executeUpdate("UPDATE ETUDIANT SET nom = '"+nom+"', prenom = '"+prenom+"', email = '"+email+"', mdp = '"+mdp+"' WHERE id_et = "+id_et+"" );
+		
+		
+	}
 }

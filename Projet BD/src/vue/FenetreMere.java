@@ -1,5 +1,7 @@
 package vue;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.Window;
@@ -16,12 +18,15 @@ public class FenetreMere extends JFrame {
 	PanelEtudiant panelEtudiant;
 	PanelGestionEtudiant panelGestionEtudiant;
 	PanelMenu panelMenu;
+	PanelWarningEtudiant panelWarningEtudiant;
 	public FenetreMere(String parTitre,Connection connexion) throws SQLException, IOException{
 		super(parTitre);
 		if(parTitre.equals("Connection BU")) {
 			panelConnexion = new PanelConnexion();
 			setContentPane(panelConnexion);
 			setSize(800,500);
+			this.pack();
+			this.getContentPane().requestFocusInWindow();
 		}
 		else if(parTitre.equals("Session Admin")) {
 			

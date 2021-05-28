@@ -12,11 +12,11 @@ public class HintPasswordField extends JPasswordField {
   Font gainFont = new Font("Tahoma", Font.PLAIN, 11);  
   Font lostFont = new Font("Tahoma", Font.ITALIC, 11);  
   Color blanc = new Color(230,230,230);
-  public HintPasswordField(final String hint) {  
+  public HintPasswordField(final String hint,Color couleur) {  
   
     setText(hint);  
     setFont(lostFont);  
-    setForeground(blanc);  
+    setForeground(couleur);  
   
     this.addFocusListener(new FocusAdapter() {  
   

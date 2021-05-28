@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 
 import controleur.Controleur;
 import modele.ConnexionBD;
+import modele.Couleur;
 import modele.Etudiant;
 import modele.Livre;
 import modele.ModeleEtudiantTable;
@@ -58,7 +59,7 @@ public class PanelGestionEtudiant extends JPanel {
      ModeleEtudiantTable tableauModel;
      Etudiant[] data;
      Connection connexion;
-    
+     Color violet2 = Couleur.getViolet2();
 
 
 	public PanelGestionEtudiant(Connection parConnexion) throws SQLException, IOException {
@@ -127,7 +128,7 @@ public class PanelGestionEtudiant extends JPanel {
          panelDroit.setPreferredSize(new Dimension(150, 700));
          panelDroit.setLayout(new GridBagLayout());
 
-         panelBouton1.setBackground(new Color(64, 2, 53));
+         panelBouton1.setBackground(violet2);
          panelBouton1.setPreferredSize(new Dimension(135, 38));
          panelBouton1.setLayout(new GridBagLayout());
 
@@ -151,7 +152,7 @@ public class PanelGestionEtudiant extends JPanel {
          gridBagConstraints.insets = new Insets(0, 0, 180, 0);
          panelDroit.add(panelBouton1, gridBagConstraints);
 
-         panelBouton2.setBackground(new Color(64, 2, 53));
+         panelBouton2.setBackground(violet2);
          panelBouton2.setPreferredSize(new Dimension(135, 38));
          panelBouton2.setLayout(new GridBagLayout());
 
@@ -264,6 +265,9 @@ public class PanelGestionEtudiant extends JPanel {
          panelTable2.add(panelRecherche, BorderLayout.NORTH);
          //tableau
  		tableau = new JTable();
+ 		tableau.setSelectionBackground(new Color(64, 2, 53));
+ 		tableau.setSelectionForeground(new Color(255,255,255));
+ 		tableau.getTableHeader().setReorderingAllowed(false);
  		data = RequeteSQL.getEtudiants(connexion,"");
  		tableauModel = new ModeleEtudiantTable(data);
 		JScrollPane scroll = new JScrollPane(tableau,
@@ -285,7 +289,11 @@ public class PanelGestionEtudiant extends JPanel {
 	    panelTable.add(panelTable2, new GridBagConstraints());
      }
 	public void setData(Etudiant[] dataEtudiant) {
-		tableau.setModel(new ModeleEtudiantTable(dataEtudiant));
+		tableauModel =new ModeleEtudiantTable(dataEtudiant);
+		tableau.setModel(tableauModel);
+	}
+	public Etudiant[] getData() {
+		return data;
 	}
 	public JPanel getPanelTri() {
 		return panelTri;
@@ -303,6 +311,10 @@ public class PanelGestionEtudiant extends JPanel {
 		champCherche.addActionListener(parControleur);
 		comboChoix.addActionListener(parControleur);
 		comboTri.addActionListener(parControleur);
+		panelBouton1.addMouseListener(parControleur);
+		panelBouton2.addMouseListener(parControleur);
+		panelBouton3.addMouseListener(parControleur);
+		tableau.getSelectionModel().addListSelectionListener(parControleur);
 	}
 	public JTextField getChampCherche() {
 		return champCherche;

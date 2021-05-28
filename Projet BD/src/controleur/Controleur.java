@@ -10,23 +10,30 @@ import java.io.IOException;
 import java.sql.*;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 
-import modele.ConnexionBD;
-import modele.Etudiant;
-import modele.ModeleEtudiantTable;
-import modele.RequeteSQL;
-import modele.Utilisateur;
+import modele.*;
 import vue.*;
 
-public class Controleur implements ActionListener {
+public class Controleur implements ActionListener, MouseListener, ListSelectionListener{
 	FenetreMere fenetremere;
-	FenetreMere fenetremereD;
+	FenetreWarning fenetreWarning;
+	FenetreAjoutEtudiant fenetreAjoutEtudiant;
+	FenetreEditEtudiant fenetreEditEtudiant;
 	PanelConnexion panelConnexion;
 	PanelAdmin panelAdmin;
 	PanelRecherche panelRecherche;
 	PanelGestionEtudiant panelGestionEtudiant;
 	PanelMenu panelMenu;
 	JButton boutonLogin;
+	JButton boutonOuiSup;
+	JButton boutonNonSup;
+	JLabel boutonAjout;
+	JLabel boutonEdit;
 	JTextField champCherche;
 	JTable tableauEtudiant;
 	String adminId = "a";
@@ -37,7 +44,23 @@ public class Controleur implements ActionListener {
 	String pwd;
 	JComboBox<String> comboChoix;
 	Etudiant[] dataEtudiant;
+	String id_et;
+	String nomEt;
+	String prenomEt;
+	String emailEt;
+	String mdpEt;
+	Color orange;
+	Color violet;
+	Color blanc;
+	Color bleu;
+	Color rouge;
+	Color violet2 = Couleur.getViolet2();
 	public Controleur(FenetreMere parFenetremere, Connection parConnection) throws SQLException, IOException {
+		orange = Couleur.getOrange();
+		violet = Couleur.getViolet();
+		blanc = Couleur.getBlanc();
+		bleu = Couleur.getBleu();
+		rouge = Couleur.getRouge();
 		fenetremere = parFenetremere;
 		connection = parConnection;
 		panelMenu = new PanelMenu(connection);
@@ -139,6 +162,165 @@ public class Controleur implements ActionListener {
 				dataEtudiant =RequeteSQL.getEtudiants(connection," WHERE "+comboChoix.getSelectedItem()+" LIKE '"+champCherche.getText()+"%' ORDER BY "+comboChoix.getSelectedItem()+" DESC");
 			}
 			panelGestionEtudiant.setData(dataEtudiant);
+		}
+		else if(parEvt.getSource()==boutonOuiSup) {
+			fenetreWarning.dispose();
+			try {	
+				RequeteSQL.deleteEtudiant(connection, id_et);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			dataEtudiant =RequeteSQL.getEtudiants(connection,"");
+			panelGestionEtudiant.setData(dataEtudiant);
+			panelGestionEtudiant.getPanelBouton1().setBorder(null);
+		}
+		else if(parEvt.getSource()==boutonNonSup) {
+			fenetreWarning.dispose();
+		}
+		
+	}
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if(e.getSource()==panelGestionEtudiant.getPanelBouton1()) {
+			int ligneSup =panelGestionEtudiant.getTableau().getSelectedRow();
+			if(ligneSup>-1) {
+				id_et = (String) panelGestionEtudiant.getTableau().getValueAt(ligneSup, 0);
+				nomEt = (String) panelGestionEtudiant.getTableau().getValueAt(ligneSup, 1);
+				prenomEt = (String) panelGestionEtudiant.getTableau().getValueAt(ligneSup, 2);
+				fenetreWarning = new FenetreWarning(nomEt.toUpperCase()+" "+prenomEt.toLowerCase());
+				fenetreWarning.getPanelWarningEtudiant().enregistreEcouteur(this);
+				boutonOuiSup = fenetreWarning.getPanelWarningEtudiant().getBoutonOui();
+				boutonNonSup = fenetreWarning.getPanelWarningEtudiant().getBoutonNon();
+				fenetreWarning.setLocationRelativeTo(panelGestionEtudiant);
+				fenetreWarning.setVisible(true);
+			}
+		}
+		else if(e.getSource()==panelGestionEtudiant.getPanelBouton2()) {
+			int ligneSup =panelGestionEtudiant.getTableau().getSelectedRow();
+			if(ligneSup>-1) {
+				id_et = (String) panelGestionEtudiant.getTableau().getValueAt(ligneSup, 0);
+				nomEt = (String) panelGestionEtudiant.getTableau().getValueAt(ligneSup, 1);
+				prenomEt = (String) panelGestionEtudiant.getTableau().getValueAt(ligneSup, 2);
+				emailEt = (String) panelGestionEtudiant.getTableau().getValueAt(ligneSup, 3);
+				mdpEt = (String) panelGestionEtudiant.getTableau().getValueAt(ligneSup, 4);
+				fenetreEditEtudiant = new FenetreEditEtudiant(id_et,nomEt,prenomEt,emailEt,mdpEt);
+				fenetreEditEtudiant.enregistreEcouteur(this);
+				panelGestionEtudiant.getPanelBouton2().setBorder(null);
+				boutonEdit = fenetreEditEtudiant.getLabelBouton();
+				fenetreEditEtudiant.setLocationRelativeTo(panelGestionEtudiant);
+				fenetreEditEtudiant.setVisible(true);
+			}
+		}
+		else if(e.getSource()==panelGestionEtudiant.getPanelBouton3()) {
+			fenetreAjoutEtudiant = new FenetreAjoutEtudiant();
+			fenetreAjoutEtudiant.enregistreEcouteur(this);
+			boutonAjout = fenetreAjoutEtudiant.getLabelBouton();
+			fenetreAjoutEtudiant.setLocationRelativeTo(panelGestionEtudiant);
+			fenetreAjoutEtudiant.setVisible(true);
+		}
+		if(e.getSource()==boutonAjout) {
+			String nomEt = fenetreAjoutEtudiant.getTxtNom().getText();
+			String prenomEt = fenetreAjoutEtudiant.getTxtPrenom().getText();
+			String emailEt = fenetreAjoutEtudiant.getTxtEmail().getText();
+			String mdpEt = fenetreAjoutEtudiant.getTxtMdp().getText();
+			try {
+				RequeteSQL.addEtudiant(connection, nomEt, prenomEt, emailEt, mdpEt);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			dataEtudiant =RequeteSQL.getEtudiants(connection,"");
+			panelGestionEtudiant.setData(dataEtudiant);
+			fenetreAjoutEtudiant.dispose();
+		}
+		if(e.getSource()==boutonEdit) {
+			String nomEt = fenetreEditEtudiant.getTxtNom().getText();
+			String prenomEt = fenetreEditEtudiant.getTxtPrenom().getText();
+			String emailEt = fenetreEditEtudiant.getTxtEmail().getText();
+			String mdpEt = fenetreEditEtudiant.getTxtMdp().getText();
+			String idEt = fenetreEditEtudiant.getId_et();
+			try {
+				RequeteSQL.editEtudiant(connection, nomEt, prenomEt, emailEt, mdpEt, idEt);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			dataEtudiant =RequeteSQL.getEtudiants(connection,"");
+			panelGestionEtudiant.setData(dataEtudiant);
+			fenetreEditEtudiant.dispose();
+		}
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		int ligneSup =panelGestionEtudiant.getTableau().getSelectedRow();
+		Border selectBorder = BorderFactory.createLineBorder(blanc, 3);
+		if(e.getSource()==panelGestionEtudiant.getPanelBouton3()) {
+			panelGestionEtudiant.getPanelBouton3().setBorder(selectBorder);
+		}
+		if(ligneSup>-1) {
+			if(e.getSource()==panelGestionEtudiant.getPanelBouton1()) {
+				panelGestionEtudiant.getPanelBouton1().setBorder(selectBorder);
+			}
+			else if(e.getSource()==panelGestionEtudiant.getPanelBouton2()) {
+				panelGestionEtudiant.getPanelBouton2().setBorder(selectBorder);
+			}
+		}
+		if(e.getSource()==boutonAjout) {
+			fenetreAjoutEtudiant.setBoutonImage(2);
+		}
+		if(e.getSource()==boutonEdit) {
+			fenetreEditEtudiant.setBoutonImage(2);
+		}
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		int ligneSup =panelGestionEtudiant.getTableau().getSelectedRow();
+		Border selectBorder = null;
+		if(e.getSource()==panelGestionEtudiant.getPanelBouton3()) {
+			panelGestionEtudiant.getPanelBouton3().setBorder(selectBorder);
+		}
+		if(ligneSup>-1) {
+			if(e.getSource()==panelGestionEtudiant.getPanelBouton1()) {
+				panelGestionEtudiant.getPanelBouton1().setBorder(selectBorder);
+			}
+			else if(e.getSource()==panelGestionEtudiant.getPanelBouton2()) {
+				panelGestionEtudiant.getPanelBouton2().setBorder(selectBorder);
+			}
+		}
+		if(e.getSource()==boutonAjout) {
+			fenetreAjoutEtudiant.setBoutonImage(1);
+		}
+		if(e.getSource()==boutonEdit) {
+			fenetreEditEtudiant.setBoutonImage(1);
+		}
+	}
+
+
+	@Override
+	public void valueChanged(ListSelectionEvent e) {
+		int ligneSup =panelGestionEtudiant.getTableau().getSelectedRow();
+		if(ligneSup>-1) {
+			panelGestionEtudiant.getPanelBouton1().setBackground(violet);
+			panelGestionEtudiant.getPanelBouton2().setBackground(violet);
+		}
+		else if(ligneSup==-1) {
+			panelGestionEtudiant.getPanelBouton1().setBackground(violet2);
+			panelGestionEtudiant.getPanelBouton2().setBackground(violet2);
 		}
 		
 	}
