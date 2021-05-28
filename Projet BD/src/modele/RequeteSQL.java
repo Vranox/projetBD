@@ -46,10 +46,11 @@ public class RequeteSQL {
 	 * @return
 	 */
 	public static Livre[] getBooks(Connection connexion,String options) {
-		Livre[] res = new Livre[getNumberOfRows(connexion,"LIVRE")];
+		Livre[] res = new Livre[getNumberOfRows(connexion,"LIVRE " + options)];
 		int index = 0;
 		try {
 			Statement stmt = connexion.createStatement();
+			//System.out.println("SELECT * FROM LIVRE " + options);
 			ResultSet rset = stmt.executeQuery("SELECT * FROM LIVRE " + options);
 			
 			while(rset.next()) {
@@ -103,7 +104,7 @@ public class RequeteSQL {
 			}
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
-			panel.getLabelFill().setText("Echec de connexion � la BD");
+			panel.getLabelFill().setText("Echec de connexion � la BD");
 			panel.getLabelFill().setOpaque(true);
 			return false;
 		}
@@ -144,7 +145,49 @@ public class RequeteSQL {
 	public static void editEtudiant(Connection connexion, String nom, String prenom, String email,String mdp, String id_et) throws SQLException {
 		Statement stmt = connexion.createStatement();
 		stmt.executeUpdate("UPDATE ETUDIANT SET nom = '"+nom+"', prenom = '"+prenom+"', email = '"+email+"', mdp = '"+mdp+"' WHERE id_et = "+id_et+"" );
-		
-		
+	}
+	
+	/**
+	 * fonction qui renvoie -1 si l'exemplaire n'est pas emprunté et l'id de l'etudiant s'il l'est pas
+	 * @param connexion
+	 * @param id_ex
+	 * @return
+	 */
+	public static int whoEmprunted(Connection connexion, String id_ex) {
+		int res = -1;
+		try {
+ 			Statement stmt = connexion.createStatement();
+ 			ResultSet rset=stmt.executeQuery("SELECT * FROM EMPRUNT WHERE ID_EX = " + id_ex + " AND (sysDate BETWEEN DATE_EMP AND DATE_RETOUR)");
+ 			
+ 			while(rset.next()) {
+ 				res = rset.getInt("ID_ET");
+ 			}
+ 			
+ 		} catch (SQLException e) {
+ 			e.printStackTrace();
+ 		}
+		return res;
+	}
+	
+	/**
+	 * Fonction qui renvoie -1 si l'exemplaire est n'est pas reservé et l'id de l'etudiant s'il l'est
+	 * @param connexion
+	 * @param id_livre
+	 * @return
+	 */
+	public static int whoReserved(Connection connexion, String id_livre) {
+		int res = -1;
+		try {
+ 			Statement stmt = connexion.createStatement();
+ 			ResultSet rset=stmt.executeQuery("SELECT * FROM RESERV WHERE ID_LIVRE = " + id_livre + " AND (sysDate BETWEEN DATE_RES AND DATE_FIN_RES)");
+ 			
+ 			while(rset.next()) {
+ 				res = rset.getInt("ID_ET");
+ 			}
+ 			
+ 		} catch (SQLException e) {
+ 			e.printStackTrace();
+ 		}
+		return res;
 	}
 }

@@ -70,7 +70,7 @@ public class Controleur implements ActionListener, MouseListener, ListSelectionL
 		panelGestionEtudiant = panelMenu.getPanelGestionEtudiant();
 		panelRecherche = panelMenu.getPanelRecherche();
 		panelGestionEtudiant.enregistreEcouteur(this);
-		//panelRecherche.enregistreEcouteur(this);
+		panelRecherche.enregistreEcouteur(this);
 		panelAdmin.enregistreEcouteur(this);
 		
 		
@@ -321,6 +321,10 @@ public class Controleur implements ActionListener, MouseListener, ListSelectionL
 		else if(ligneSup==-1) {
 			panelGestionEtudiant.getPanelBouton1().setBackground(violet2);
 			panelGestionEtudiant.getPanelBouton2().setBackground(violet2);
+		}
+		
+		else if(e.getSource() == panelRecherche.getBtnRecherche()) {
+			panelRecherche.search();
 		}
 		
 	}

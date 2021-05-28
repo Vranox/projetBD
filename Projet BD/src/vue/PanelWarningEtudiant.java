@@ -30,7 +30,7 @@ public class PanelWarningEtudiant extends JPanel{
 		panelWarning.setLayout(new GridBagLayout());
 		labelImageWarning = new JLabel(iconeWarning);
 		panelWarning.add(labelImageWarning,makeGbc(1,0,1));
-        labelPhrase = new JLabel("            Etes vous sûr de vouloir supprimer l'étudiant :");
+        labelPhrase = new JLabel("            Etes vous sÃ»r de vouloir supprimer l'Ã©tudiant :");
         labelPhrase.setHorizontalTextPosition(SwingConstants.CENTER);
         labelPhrase.setForeground(rouge);
         panelWarning.add(labelPhrase,makeGbc(0,1,3));
