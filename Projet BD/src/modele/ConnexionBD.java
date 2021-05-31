@@ -17,15 +17,17 @@ public class ConnexionBD {
 	 * @throws IOException
 	 */
 	public static Connection ConnectFromIUT() throws SQLException, IOException{
+		Connection connexion = null;
 		try{ 
 			Class.forName ("oracle.jdbc.driver.OracleDriver");
+			connexion = DriverManager.getConnection ("jdbc:oracle:thin:@localhost:1521:info","dstengel","azerty");
 			}    
 		catch (ClassNotFoundException e){ 
 			System.out.println ("Echec dans le chargement de driver d'oracle"); 
 			e.printStackTrace (); 
 			}// Connection à la base de données
 		System.out.println ("Connexion à la base de données réussie....");
-		return DriverManager.getConnection ("jdbc:oracle:thin:@localhost:1521:info","dstengel","azerty");
+		return connexion;
 		}
 	}
 	

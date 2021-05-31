@@ -12,6 +12,7 @@ public class PanelMenu extends JPanel {
 	JPanel panelCartes;
 	JPanel panelSide;
 	PanelRecherche panelRecherche;
+	PanelGestionLivre panelGestionLivre;
 	PanelGestionEtudiant panelGestionEtudiant;
 	Color orange  = new Color(242,159,5);
 	Color violet = new Color(64,2,53);
@@ -22,6 +23,7 @@ public class PanelMenu extends JPanel {
 		panelCartes = new JPanel();
 		panelSide = new JPanel();
 		panelRecherche = new PanelRecherche(connexion);
+		panelGestionLivre = new PanelGestionLivre(connexion);
 		panelGestionEtudiant = new PanelGestionEtudiant(connexion);
 		panelGestionEtudiant.setPreferredSize(new Dimension(805,800));
 		panelGestionEtudiant.setBackground(orange);
@@ -39,6 +41,7 @@ public class PanelMenu extends JPanel {
 		panelCartes.setLayout(cartesLayout);
 		panelCartes.add(panelRecherche,"Recherche");
 		panelCartes.add(panelGestionEtudiant,"GestionEtudiant");
+		panelCartes.add(panelGestionLivre,"GestionLivre");
 	}
 	public void setCartes(int i) {
 		switch(i) {
@@ -48,7 +51,13 @@ public class PanelMenu extends JPanel {
 		case 2:
 			cartesLayout.show(panelCartes, "GestionEtudiant");
 			break;
+		case 3:
+			cartesLayout.show(panelCartes, "GestionLivre");
+			break;
 		}
+	}
+	public PanelGestionLivre getPanelGestionLivre() {
+		return panelGestionLivre;
 	}
 	public PanelRecherche getPanelRecherche() {
 		return panelRecherche;

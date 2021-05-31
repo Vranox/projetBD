@@ -308,12 +308,12 @@ public class PanelGestionEtudiant extends JPanel {
 		this.tableau = tableau;
 	}
 	public void enregistreEcouteur(Controleur parControleur) {
-		champCherche.addActionListener(parControleur);
 		comboChoix.addActionListener(parControleur);
 		comboTri.addActionListener(parControleur);
 		panelBouton1.addMouseListener(parControleur);
 		panelBouton2.addMouseListener(parControleur);
 		panelBouton3.addMouseListener(parControleur);
+		champCherche.addKeyListener(parControleur);
 		tableau.getSelectionModel().addListSelectionListener(parControleur);
 	}
 	public JTextField getChampCherche() {

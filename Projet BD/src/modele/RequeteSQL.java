@@ -5,6 +5,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.table.DefaultTableModel;
 
@@ -28,6 +32,22 @@ public class RequeteSQL {
 		try {
 			Statement stmt = connexion.createStatement();
 			ResultSet rset = stmt.executeQuery("SELECT COUNT(*) FROM " + table);
+			
+			while(rset.next()) {
+				res = rset.getInt("COUNT(*)");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return res;
+	}
+	public static int getNumberOfRows2(Connection connexion, String requete) {
+		int res = 0;
+		try {
+			Statement stmt = connexion.createStatement();
+			ResultSet rset = stmt.executeQuery(requete);
 			
 			while(rset.next()) {
 				res = rset.getInt("COUNT(*)");
@@ -96,7 +116,6 @@ public class RequeteSQL {
 			String sql = "SELECT * FROM ETUDIANT WHERE email = '"+user.username+"' AND mdp='"+user.password+"'";
 			ResultSet rset = stmt.executeQuery(sql);
 			if(rset.next()) {
-				System.out.println("success");
 				return true;
 			}
 			else {
@@ -114,7 +133,7 @@ public class RequeteSQL {
 		int index = 0;
 		try {
 			Statement stmt = connexion.createStatement();
-			ResultSet rset = stmt.executeQuery("SELECT * FROM 	 ETUDIANT" + options);
+			ResultSet rset = stmt.executeQuery("SELECT * FROM ETUDIANT" + options);
 			
 			while(rset.next()) {
 				//System.out.println("test");
@@ -134,17 +153,210 @@ public class RequeteSQL {
 		}
 		return res;
 	}
+	public static Etudiant[] getEmp(Connection connexion,String options) {
+		Etudiant[] res = new Etudiant[getNumberOfRows2(connexion,"SELECT COUNT(*) FROM ETUDIANT,EMPRUNT,LIVRE,EXEMPLAIRE WHERE EMPRUNT.ID_ET = ETUDIANT.ID_ET AND DATE_RETOUR IS NULL AND EXEMPLAIRE.ID_LIVRE=LIVRE.ID_LIVRE AND EXEMPLAIRE.ID_EX = EMPRUNT.ID_EX AND LIVRE.ID_LIVRE="+options)];
+		int index = 0;
+		try {
+			Statement stmt = connexion.createStatement();
+			ResultSet rset = stmt.executeQuery("SELECT ETUDIANT.ID_ET,NOM,PRENOM,EMAIL,EXEMPLAIRE.ID_EX FROM ETUDIANT,EMPRUNT,LIVRE,EXEMPLAIRE WHERE EMPRUNT.ID_ET = ETUDIANT.ID_ET AND DATE_RETOUR IS NULL AND EXEMPLAIRE.ID_LIVRE=LIVRE.ID_LIVRE AND EXEMPLAIRE.ID_EX = EMPRUNT.ID_EX AND LIVRE.ID_LIVRE="+options);
+			
+			while(rset.next()) {
+				//System.out.println("test");
+				String id_et = rset.getString("id_et");
+ 				String nom = rset.getString("nom");
+ 				String prenom = rset.getString("prenom");
+ 				String email = rset.getString("email");
+ 				String mdp = rset.getString("id_ex");
+ 				//System.out.println("id: "+id_et+" nom: "+nom+" prenom: "+prenom+" email: "+email+" mdp: "+mdp);
+				
+				res[index] = new Etudiant(id_et,nom,prenom,email,mdp);
+				index++;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return res;
+	}
+	
+	
+	public static Reservation[] getRes(Connection connexion,String options) {
+		Reservation[] res = new Reservation[getNumberOfRows(connexion,"RESERV,LIVRE,ETUDIANT WHERE RESERV.ID_ET = ETUDIANT.ID_ET AND LIVRE.ID_LIVRE = RESERV.ID_LIVRE AND DATE_FIN_RES IS NULL AND LIVRE.ID_LIVRE ='"+options+"'")];
+		int index = 0;
+		try {
+			Statement stmt = connexion.createStatement();
+			ResultSet rset = stmt.executeQuery("SELECT * FROM 	 RESERV,LIVRE,ETUDIANT WHERE RESERV.ID_ET = ETUDIANT.ID_ET AND LIVRE.ID_LIVRE = RESERV.ID_LIVRE AND DATE_FIN_RES IS NULL AND LIVRE.ID_LIVRE ='"+options+"'");
+			
+			while(rset.next()) {
+				String id_et = rset.getString("id_et");
+ 				String titre = rset.getString("titre");
+ 				String nom = rset.getString("nom");
+ 				String prenom = rset.getString("prenom");
+ 				String date_res = rset.getString("date_res");
+				
+				res[index] = new Reservation(id_et,date_res,titre,nom,prenom);
+				index++;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return res;
+	}
+	
+	
 	public static  void deleteEtudiant(Connection connexion,String id) throws SQLException {
 			Statement stmt = connexion.createStatement();
 			stmt.executeUpdate("DELETE FROM ETUDIANT WHERE ID_ET = '"+id+"'" );
 	}
+	public static  void deleteLivre(Connection connexion,String id) throws SQLException {
+		Statement stmt = connexion.createStatement();
+		RequeteSQL.delAllExemplaire(connexion, id);
+		stmt.executeUpdate("DELETE FROM LIVRE WHERE ID_LIVRE = '"+id+"'" );
+}
 	public static void addEtudiant(Connection connexion, String nom,String prenom,String email,String mdp) throws SQLException {
 		Statement stmt = connexion.createStatement();
 		stmt.executeUpdate("INSERT INTO ETUDIANT (nom,prenom,email,mdp) VALUES ('"+nom+"', '"+prenom+"','"+email+"','"+mdp+"')" );
 	}
+	public static void addLivre(Connection connexion, String titre,String auteur) throws SQLException {
+		Statement stmt = connexion.createStatement();
+		stmt.executeUpdate("INSERT INTO LIVRE (titre,auteur) VALUES ('"+titre+"', '"+auteur+"')" );
+	}
 	public static void editEtudiant(Connection connexion, String nom, String prenom, String email,String mdp, String id_et) throws SQLException {
 		Statement stmt = connexion.createStatement();
 		stmt.executeUpdate("UPDATE ETUDIANT SET nom = '"+nom+"', prenom = '"+prenom+"', email = '"+email+"', mdp = '"+mdp+"' WHERE id_et = "+id_et+"" );
+	}
+	public static void editLivre(Connection connexion, String titre, String auteur, String id_livre) throws SQLException {
+		Statement stmt = connexion.createStatement();
+		System.out.println("Titre: "+titre+" Auteur: "+auteur+" id_livre: "+id_livre);
+		stmt.executeQuery("UPDATE LIVRE SET titre = '"+titre+"', auteur = '"+auteur+"' WHERE id_livre = "+id_livre );
+	}
+	public static int getExemplaire(Connection connexion, String id_livre) throws SQLException{
+		int res = 0;
+		try {
+			Statement stmt = connexion.createStatement();
+			ResultSet rset = stmt.executeQuery("SELECT COUNT(*) FROM EXEMPLAIRE WHERE ID_LIVRE = "+ id_livre );
+			
+			while(rset.next()) {
+				res = rset.getInt("COUNT(*)");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return res;
+	}
+	public static int getDisponible(Connection connexion, int nbreExemplaire, String id_livre) throws SQLException {
+		int res = 0;
+		int nbreEmprunt = RequeteSQL.getEmprunt(connexion, id_livre);
+		res = nbreExemplaire - nbreEmprunt;
+		return res;
+	}
+	public static int getEmprunt(Connection connexion,String id_livre) throws SQLException {
+		Statement stmt = connexion.createStatement();
+		ResultSet rset = stmt.executeQuery("SELECT COUNT(*) FROM EXEMPLAIRE,EMPRUNT WHERE EMPRUNT.ID_EX=EXEMPLAIRE.ID_EX AND DATE_RETOUR IS NULL AND ID_LIVRE = '"+id_livre+"'" );
+		int res = 0;
+		while(rset.next()) {
+				res += rset.getInt("COUNT(*)");
+		}
+		return res;
+	}
+	public static int getEmpruntEtudiant(Connection connexion,String id_et) throws SQLException {
+		Statement stmt = connexion.createStatement();
+		ResultSet rset = stmt.executeQuery("SELECT * FROM EXEMPLAIRE,EMPRUNT WHERE EXEMPLAIRE.ID_EX = EMPRUNT.ID_EX AND ID_ET = '"+id_et+"'" );
+		int res = 0;
+		while(rset.next()) {
+			String id_ex = rset.getString("id_ex");
+			ResultSet rset2 = stmt.executeQuery("SELECT COUNT(*) FROM EMPRUNT WHERE ID_EX = "+ id_ex +" AND DATE_RETOUR IS NULL");
+				
+				while(rset2.next()) {
+					res += rset2.getInt("COUNT(*)");
+				}
+		}
+		System.out.println(res);
+		return res;
+	}
+	public static int getReservation(Connection connexion, String id_livre) throws SQLException {
+		Statement stmt = connexion.createStatement();
+		ResultSet rset = stmt.executeQuery("SELECT COUNT(*) FROM RESERV WHERE ID_LIVRE = '"+id_livre+"'" );
+		int id_ex=0;
+		while(rset.next()) {
+			id_ex = rset.getInt("COUNT(*)");
+		}
+		return id_ex;
+	}
+	public static void delExemplaire(Connection connexion, String id_ex) {
+		Statement stmt;
+		try {
+			stmt = connexion.createStatement();
+			stmt.executeUpdate("DELETE FROM EXEMPLAIRE WHERE ID_EX = '"+id_ex+"'" );
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public static void delAllExemplaire(Connection connexion, String id_livre) throws SQLException {
+		Statement stmt = connexion.createStatement();
+		ResultSet rset = stmt.executeQuery("SELECT * FROM EXEMPLAIRE WHERE ID_LIVRE = '"+id_livre+"'" );
+		
+		while(rset.next()) {
+			String id_ex = rset.getString("id_ex");
+			RequeteSQL.delExemplaire(connexion, id_ex);
+		}
+		
+	}
+	public static String getLastIdLivre(Connection connexion) throws SQLException {
+		Statement stmt = connexion.createStatement();
+		ResultSet rset = stmt.executeQuery("SELECT MAX(ID_LIVRE) FROM LIVRE");
+		String res = null;
+		while(rset.next()) {
+			res = rset.getString("MAX(ID_LIVRE)");
+		}
+		return res;
+	}
+	public static void setExemplaire(Connection connexion, String id_livre, int nombreVoulu) throws SQLException{
+		int nombreActuel = RequeteSQL.getExemplaire(connexion, id_livre);
+		if(nombreActuel ==nombreVoulu) {
+			
+		}
+		else if(nombreActuel>nombreVoulu) {
+			Statement stmt = connexion.createStatement();
+			ResultSet rset = stmt.executeQuery("SELECT * FROM EXEMPLAIRE WHERE ID_LIVRE = "+ id_livre );
+			while(rset.next()&&nombreActuel!=nombreVoulu) {
+				String id_ex = rset.getString("id_ex");
+				RequeteSQL.delExemplaire(connexion, id_ex);
+				nombreActuel-=1;
+			}
+		}
+		else if(nombreActuel<nombreVoulu) {
+			while(nombreActuel!=nombreVoulu) {
+				Statement stmt = connexion.createStatement();
+				stmt.executeQuery("INSERT INTO EXEMPLAIRE (ID_LIVRE) VALUES ("+id_livre+")" );
+				nombreActuel+=1;
+			}
+		}
+	}
+	public static void setEmpruntEtudiant(Connection connexion, String id_et, String id_livre) throws SQLException {
+		Statement stmt = connexion.createStatement();
+		ResultSet rset = stmt.executeQuery("SELECT * FROM EXEMPLAIRE WHERE ID_EX NOT IN (SELECT DISTINCT EXEMPLAIRE.ID_EX FROM EXEMPLAIRE,EMPRUNT WHERE EXEMPLAIRE.ID_EX = EMPRUNT.ID_EX AND EXEMPLAIRE.ID_LIVRE ="+id_livre+") AND ID_LIVRE="+id_livre);
+		rset.next();
+		String id_ex = rset.getString("id_ex");
+		RequeteSQL.setEmprunt(connexion, id_et, id_ex);
+	}
+	public static void setEmprunt(Connection connexion, String id_et,String id_ex) throws SQLException {
+		Statement stmt = connexion.createStatement();
+		Date date = Calendar.getInstance().getTime();  
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");  
+		String date_emp = dateFormat.format(date);
+		stmt.executeQuery("INSERT INTO EMPRUNT (ID_ET,ID_EX,DATE_EMP) VALUES ("+id_et+","+id_ex+",TO_DATE('"+date_emp+"','yyyy-mm-dd hh:mi:ss'))" );
+	}
+	public static void finEmprunt(Connection connexion, String id_et,String id_ex) throws SQLException {
+		Statement stmt = connexion.createStatement();
+		Date date = Calendar.getInstance().getTime();  
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");  
+		String date_emp = dateFormat.format(date);
+		stmt.executeQuery("UPDATE EMPRUNT SET DATE_RETOUR = TO_DATE('"+date_emp+"','yyyy-mm-dd hh:mi:ss') WHERE ID_ET="+id_et+" AND ID_EX ="+id_ex );
 	}
 	
 	/**

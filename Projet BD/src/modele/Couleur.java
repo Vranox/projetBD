@@ -8,6 +8,10 @@ public class Couleur {
 	static Color blanc = new Color(255,255,255);
 	static Color bleu = new Color(4,57,217);
 	static Color rouge = new Color(255,0,51);
+	static Color vert = new Color(0,255,102);
+	public static Color getVert() {
+		return vert;
+	}
 	public static Color getOrange() {
 		return orange;
 	}
@@ -30,6 +34,7 @@ public class Couleur {
 	Color blanc = Couleur.getBlanc();
 	Color bleu = Couleur.getBleu();
 	Color rouge = Couleur.getRouge();
+	Color vert = Couleur.getVert();
 	*/
 	public static Color getViolet2() {
 		return violet2;

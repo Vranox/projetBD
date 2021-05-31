@@ -4,7 +4,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class ModeleLivreTable extends DefaultTableModel{
 
-	String[] intitules = {"id_livre","auteur","titre"};
+	String[] intitules = {"ID_LIVRE","TITRE","AUTEUR"};
 	int nbLignes;
 	int nbColonnes = 3;
 	public ModeleLivreTable(Livre[] data) {

@@ -15,7 +15,7 @@ import modele.HintTextField;
  */
 public class PanelAdmin extends JPanel{
 
-	String[] intitulesMenuCentre = new String[] {"Rechercher Livre","Gérer Comptes Etudiant","Ajouter des livres au catalogue","Afficher les livres en retard"};
+	String[] intitulesMenuCentre = new String[] {"Rechercher Livre","Gestion Comptes Etudiant","Gestion Livres","Afficher les livres en retard"};
 	JButton[] boutonsMenuCentre = new JButton[intitulesMenuCentre.length];
 	/**
 	 * Constructeur du PanelAdmin, utilise un BorderLayout qui place au centre les actions possibles.

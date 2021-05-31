@@ -1,13 +1,20 @@
 package vue;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Toolkit;
+import java.awt.Window;
 
 import javax.swing.*;
 
 import controleur.Controleur;
 import modele.Couleur;
 
-public class PanelWarningEtudiant extends JPanel{
+public class FenetreWarningLivre extends JDialog{
+	JPanel panelWarningLivre;
 	Color orange = Couleur.getOrange();
 	Color violet = Couleur.getViolet();
 	Color blanc = Couleur.getBlanc();
@@ -20,7 +27,15 @@ public class PanelWarningEtudiant extends JPanel{
     JLabel labelImageWarning;
     JLabel labelPhrase;
     ImageIcon iconeWarning = new ImageIcon("images/warning.png");
-	public PanelWarningEtudiant(String etudiant) {
+	
+	public FenetreWarningLivre(String livre) {
+		super((Window)null);
+		setModal(true);
+		panelWarningLivre = new JPanel();
+		setContentPane(panelWarningLivre);
+		setSize(500,300);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		this.setResizable(false);
 		setLayout(new GridBagLayout());
 		panelWarning = new JPanel();
 		panelWarning.setBackground(blanc);
@@ -30,11 +45,11 @@ public class PanelWarningEtudiant extends JPanel{
 		panelWarning.setLayout(new GridBagLayout());
 		labelImageWarning = new JLabel(iconeWarning);
 		panelWarning.add(labelImageWarning,makeGbc(1,0,1));
-        labelPhrase = new JLabel("            Etes vous sûr de vouloir supprimer l'étudiant :");
+        labelPhrase = new JLabel("            Etes vous s�r de vouloir supprimer :");
         labelPhrase.setHorizontalTextPosition(SwingConstants.CENTER);
         labelPhrase.setForeground(rouge);
         panelWarning.add(labelPhrase,makeGbc(0,1,3));
-        labelEtudiant = new JLabel(etudiant+" ?");
+        labelEtudiant = new JLabel(livre+" ?");
         labelEtudiant.setForeground(orange);
         GridBagConstraints gbc = makeGbc(1,2,1);
         gbc.insets = new Insets(10, 0, 20, 0);
