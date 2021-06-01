@@ -79,6 +79,15 @@ public class Controleur implements ActionListener, MouseListener, ListSelectionL
 	Color rouge;
 	Color violet2 = Couleur.getViolet2();
 	Color vert = Couleur.getVert();
+	int numCarte;
+	public int getNumCarte() {
+		return numCarte;
+	}
+
+	public void setNumCarte(int numCarte) {
+		this.numCarte = numCarte;
+	}
+
 	int nbreDispo;
 	int nbreEmprunt;
 	int nbreReserv;
@@ -101,12 +110,12 @@ public class Controleur implements ActionListener, MouseListener, ListSelectionL
 		panelGestionEtudiant.enregistreEcouteur(this);
 		panelRecherche.enregistreEcouteur(this);
 		panelAdmin.enregistreEcouteur(this);
+		panelMenu.enregistreEcouteur(this);
 		
 		
 		//pour les tests
-		fenetremere.dispose();
-		fenetremere= new FenetreMere("Session Admin",connection,panelAdmin,panelMenu);
-		fenetremere.getPanelAdmin().enregistreEcouteur(this);
+		//fenetremere.dispose();
+		//fenetremere= new FenetreMere("Session Admin",connection,panelAdmin,panelMenu);
 	}
 	// Se mettre a l'ecoute du bouton "connexion"
 
@@ -159,31 +168,6 @@ public class Controleur implements ActionListener, MouseListener, ListSelectionL
 				panelConnexion.getLabelFill().setText("Identifiant ou Mot de Passe INCORRECT");
 				panelConnexion.getLabelFill().setOpaque(true);
 			}
-		}
-		else if(Arrays.asList(panelAdmin.getBoutonsMenuCentre()).contains(parEvt.getSource())) // bouton du panelAdmin (ex: rechercher livre, ajouter livre.. ) cliqué 
-		{
-			JButton btnClicked = (JButton) parEvt.getSource();
-			panelMenu = fenetremere.getPanelMenu();
-			panelAdmin.removeAll();
-			panelAdmin.add(panelMenu);
-			panelAdmin.revalidate();
-			panelAdmin.repaint();
-			if(btnClicked.getText().equals(panelAdmin.getIntitulesMenuCentre()[0])) { // Rechercher Livre
-				
-				panelMenu.setCartes(1);
-				
-			}
-			if(btnClicked.getText().equals(panelAdmin.getIntitulesMenuCentre()[1])) { // Gérer Comptes Etudiant
-				
-				panelMenu.setCartes(2);
-			}
-			if(btnClicked.getText().equals(panelAdmin.getIntitulesMenuCentre()[2])) { // Ajouter des livres au catalogue
-				panelMenu.setCartes(3);		
-			}
-			if(btnClicked.getText().equals(panelAdmin.getIntitulesMenuCentre()[3])) { // Afficher les livres en retard
-				// TODO	
-			}
-
 		}
 		else if(parEvt.getSource()==boutonOuiSup) {
 			fenetreWarning.dispose();
@@ -437,6 +421,57 @@ public class Controleur implements ActionListener, MouseListener, ListSelectionL
 				fenetreRetourEtudiant.setVisible(true);
 			}
 		}
+		if(e.getSource()==panelAdmin.getPanelBouton1()) {
+			panelMenu = fenetremere.getPanelMenu();
+			panelAdmin.removeAll();
+			panelAdmin.add(panelMenu);
+			panelAdmin.revalidate();
+			panelAdmin.repaint();	
+			panelMenu.setCartes(3);
+			numCarte = 3;
+		}
+		if(e.getSource()==panelAdmin.getPanelBouton2()) {
+			panelMenu = fenetremere.getPanelMenu();
+			panelAdmin.removeAll();
+			panelAdmin.add(panelMenu);
+			panelAdmin.revalidate();
+			panelAdmin.repaint();	
+			panelMenu.setCartes(2);
+			numCarte = 2;
+		}
+		if(e.getSource()==panelAdmin.getPanelBouton3()) {
+			panelMenu = fenetremere.getPanelMenu();
+			panelAdmin.removeAll();
+			panelAdmin.add(panelMenu);
+			panelAdmin.revalidate();
+			panelAdmin.repaint();	
+			panelMenu.setCartes(1);
+			numCarte = 1;
+		}
+		if(e.getSource()==panelMenu.getPanelLivre()) {
+			panelMenu.setCartes(3);
+			numCarte = 3;
+		}
+		if(e.getSource()==panelMenu.getPanelEtudiant()) {
+			panelMenu.setCartes(2);
+			numCarte = 2;
+		}
+		if(e.getSource()==panelMenu.getPanelRetard()) {
+			panelMenu.setCartes(1);
+			numCarte = 1;
+		}
+		if(e.getSource()==panelMenu.getPanelHome()) {
+			PanelAdmin panel = panelAdmin;
+			panelAdmin = new PanelAdmin();
+			panel.removeAll();
+			panel.add(panelAdmin);
+			panel.revalidate();
+			panel.repaint();
+			panelAdmin.enregistreEcouteur(this);
+			panelMenu.getPanelHome().setBackground(violet2);
+		}
+				
+		
 		
 	}
 
@@ -497,7 +532,33 @@ public class Controleur implements ActionListener, MouseListener, ListSelectionL
 			if(nbreEmprunt>0)
 				panelGestionLivre.getPanelRendreBouton().setBorder(null);
 		}
-		
+		if(e.getSource()==panelAdmin.getPanelBouton1()) {
+			panelAdmin.getPanelBouton1().setBorder(null);
+		}
+		if(e.getSource()==panelAdmin.getPanelBouton2()) {
+			panelAdmin.getPanelBouton2().setBorder(null);
+		}
+		if(e.getSource()==panelAdmin.getPanelBouton3()) {
+			panelAdmin.getPanelBouton3().setBorder(null);
+		}
+		if(e.getSource()==panelAdmin.getPanelStats()) {
+			panelAdmin.getPanelStats().setBorder(null);
+		}
+		if(e.getSource()==panelMenu.getPanelHome()) {
+			panelMenu.getPanelHome().setBackground(violet);
+		}
+		if(e.getSource()==panelMenu.getPanelLivre()) {
+			if(numCarte!=3)
+				panelMenu.getPanelLivre().setBackground(violet);
+		}
+		if(e.getSource()==panelMenu.getPanelEtudiant()) {
+			if(numCarte!=2)
+				panelMenu.getPanelEtudiant().setBackground(violet);
+		}
+		if(e.getSource()==panelMenu.getPanelRetard()) {
+			if(numCarte!=1)
+				panelMenu.getPanelRetard().setBackground(violet);
+		}
 	}
 
 	@Override
@@ -544,6 +605,33 @@ public class Controleur implements ActionListener, MouseListener, ListSelectionL
 		if(e.getSource()==panelGestionLivre.getPanelRendreBouton()) {
 			if(nbreEmprunt>0)
 				panelGestionLivre.getPanelRendreBouton().setBorder(BorderFactory.createLineBorder(blanc, 5));
+		}
+		if(e.getSource()==panelAdmin.getPanelBouton1()) {
+			panelAdmin.getPanelBouton1().setBorder(BorderFactory.createLineBorder(orange, 5));
+		}
+		if(e.getSource()==panelAdmin.getPanelBouton2()) {
+			panelAdmin.getPanelBouton2().setBorder(BorderFactory.createLineBorder(orange, 5));
+		}
+		if(e.getSource()==panelAdmin.getPanelBouton3()) {
+			panelAdmin.getPanelBouton3().setBorder(BorderFactory.createLineBorder(orange, 5));
+		}
+		if(e.getSource()==panelAdmin.getPanelStats()) {
+			panelAdmin.getPanelStats().setBorder(BorderFactory.createLineBorder(orange, 5));
+		}
+		if(e.getSource()==panelMenu.getPanelHome()) {
+			panelMenu.getPanelHome().setBackground(violet2);
+		}
+		if(e.getSource()==panelMenu.getPanelLivre()) {
+			if(numCarte!=3)
+				panelMenu.getPanelLivre().setBackground(violet2);
+		}
+		if(e.getSource()==panelMenu.getPanelEtudiant()) {
+			if(numCarte!=2)
+				panelMenu.getPanelEtudiant().setBackground(violet2);
+		}
+		if(e.getSource()==panelMenu.getPanelRetard()) {
+			if(numCarte!=1)
+				panelMenu.getPanelRetard().setBackground(violet2);
 		}
 	}
 
