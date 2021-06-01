@@ -19,8 +19,10 @@ public class FenetreMere extends JFrame {
 	PanelGestionEtudiant panelGestionEtudiant;
 	PanelMenu panelMenu;
 	PanelWarningEtudiant panelWarningEtudiant;
+	String titre;
 	public FenetreMere(String parTitre,Connection connexion) throws SQLException, IOException{
 		super(parTitre);
+		titre = parTitre;
 		if(parTitre.equals("Connection BU")) {
 			panelConnexion = new PanelConnexion();
 			setContentPane(panelConnexion);
@@ -35,7 +37,7 @@ public class FenetreMere extends JFrame {
 			setSize(1000,800);
 		}
 		else if(parTitre.equals("Session Etudiant")) {
-			panelEtudiant = new PanelEtudiant();
+			panelEtudiant = new PanelEtudiant(connexion);
 			setContentPane(panelEtudiant);
 			setSize(1000,800);
 		}
@@ -48,6 +50,12 @@ public class FenetreMere extends JFrame {
 		setVisible(true);
 		this.setResizable(false);
 		FenetreMere.centreWindow(this);
+	}
+	public String getTitre() {
+		return titre;
+	}
+	public PanelEtudiant getPanelEtudiant() {
+		return panelEtudiant;
 	}
 	public FenetreMere(String parTitre,Connection connexion,PanelAdmin parPanelAdmin,PanelMenu parPanelMenu) {
 		super(parTitre);

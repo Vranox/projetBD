@@ -37,6 +37,7 @@ public class Controleur implements ActionListener, MouseListener, ListSelectionL
 	PanelGestionEtudiant panelGestionEtudiant;
 	PanelGestionLivre panelGestionLivre;
 	PanelMenu panelMenu;
+	PanelEtudiant panelEtudiant;
 	JButton boutonLogin;
 	JButton boutonOuiSup;
 	JButton boutonOuiSupLivre;
@@ -159,6 +160,10 @@ public class Controleur implements ActionListener, MouseListener, ListSelectionL
 				fenetremere.dispose();
 				try {
 					fenetremere = new FenetreMere("Session Etudiant",connection);
+					panelEtudiant = fenetremere.getPanelEtudiant();
+					panelEtudiant.setMailEtudiant(user.getUsername());
+					panelEtudiant.updateReservationPossibilities();
+					panelEtudiant.enregistreEcouteur(this);
 				} catch (SQLException | IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -222,7 +227,7 @@ public class Controleur implements ActionListener, MouseListener, ListSelectionL
 				fenetreEmpruntEtudiant.dispose();
 			}
 			else {
-				System.out.println("Cet étudiant à trop d'emprunt");
+				System.out.println("Cet ï¿½tudiant ï¿½ trop d'emprunt");
 			}
 		}
 		else if(parEvt.getSource()==boutonRetour) {
@@ -236,6 +241,10 @@ public class Controleur implements ActionListener, MouseListener, ListSelectionL
 				e.printStackTrace();
 			}
 			fenetreRetourEtudiant.dispose();
+		}
+		else if(fenetremere.getTitre() == "Session Etudiant" && parEvt.getSource() == panelEtudiant.getBtnReserv()) {
+			panelEtudiant.addReserv();
+			panelEtudiant.updateReservationPossibilities();
 		}
 		
 	}
@@ -696,6 +705,10 @@ public class Controleur implements ActionListener, MouseListener, ListSelectionL
 			panelRecherche.search();
 		}
 		
+		if(fenetremere.getTitre() == "Session Etudiant") {
+			panelEtudiant.updateReservationPossibilities();
+		}
+		
 	}
 
 	@Override
@@ -732,6 +745,9 @@ public class Controleur implements ActionListener, MouseListener, ListSelectionL
 		if(parEvt.getSource()==champChercheRetour) {
 			dataEtudiant =RequeteSQL.getEmp(connection,id_livre+" AND "+fenetreRetourEtudiant.getComboChoix().getSelectedItem()+" LIKE '%"+champChercheRetour.getText()+"%' ORDER BY "+fenetreRetourEtudiant.getComboChoix().getSelectedItem());
 			fenetreRetourEtudiant.setData(dataEtudiant);
+		}
+		if(fenetremere.getTitre() == "Session Etudiant" && parEvt.getSource() == panelEtudiant.getSearchBar()) {
+			panelEtudiant.search();
 		}
 		
 	}

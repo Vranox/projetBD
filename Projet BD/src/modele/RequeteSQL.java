@@ -3,6 +3,7 @@ package modele;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
@@ -204,28 +205,40 @@ public class RequeteSQL {
 		return res;
 	}
 	/**
-	 * Renvoie l'id de l'étudiant ayant réservé le livre. -1 si le livre n'est pas réservé
+	 * Fonction qui renvoie -1 si l'exemplaire est n'est pas reservé et l'id de l'etudiant s'il l'est
 	 * @param connexion
 	 * @param id_livre
-	 * @param id_etudiant
 	 * @return
 	 */
 	public static int whoReserved(Connection connexion, String id_livre) {
 		int res = -1;
 		try {
-			Statement stmt = connexion.createStatement();
-			String str = "SELECT * FROM RESERV WHERE ID_LIVRE = " + id_livre + " AND sysDate BETWEEN DATE_RES AND DATE_FIN_RES";
-			ResultSet rset = stmt.executeQuery(str);
-			System.out.println(str);
-			while(rset.next()) {
-				System.out.println(rset.getString("ID_LIVRE"));
-				res = Integer.parseInt(rset.getString("ID_ET"));
-				System.out.println("passed");
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+ 			Statement stmt = connexion.createStatement();
+ 			String str = "SELECT ID_ET FROM RESERV WHERE ID_LIVRE = '" + id_livre + "'";
+ 			ResultSet rset=stmt.executeQuery(str);
+ 			while(rset.next()) {
+ 				res = rset.getInt("ID_ET");
+ 			}
+
+ 		} catch (SQLException e) {
+ 			e.printStackTrace();
+ 		}
+		return res;
+	}
+	
+	public static int mailEtudiantToId(Connection connexion, String mail) {
+		int res = -1;
+		try {
+ 			Statement stmt = connexion.createStatement();
+ 			ResultSet rset=stmt.executeQuery("SELECT * FROM ETUDIANT WHERE EMAIL = '" + mail + "'");
+
+ 			while(rset.next()) {
+ 				res = rset.getInt("ID_ET");
+ 			}
+
+ 		} catch (SQLException e) {
+ 			e.printStackTrace();
+ 		}
 		return res;
 	}
 	
@@ -254,6 +267,10 @@ public class RequeteSQL {
 		Statement stmt = connexion.createStatement();
 		System.out.println("Titre: "+titre+" Auteur: "+auteur+" id_livre: "+id_livre);
 		stmt.executeQuery("UPDATE LIVRE SET titre = '"+titre+"', auteur = '"+auteur+"' WHERE id_livre = "+id_livre );
+	}
+	public static void addReserv(Connection connexion, String id_livre, String id_etudiant) throws SQLException{
+		Statement stmt = connexion.createStatement();
+		stmt.executeUpdate("INSERT INTO RESERV(ID_LIVRE,ID_ET,DATE_RES) VALUES('"+id_livre+"', '"+id_etudiant+"', sysDate)");
 	}
 	public static int getExemplaire(Connection connexion, String id_livre) throws SQLException{
 		int res = 0;

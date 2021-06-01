@@ -215,7 +215,7 @@ public class PanelRecherche extends JPanel{
 	
 	public void updateReservLabel() {
 		String id_livre = String.valueOf(currentBook.getId_livre());
-		int id_et = RequeteSQL.whoReserved(connexion, id_livre);
+		int id_et = 0; //RequeteSQL.whoReserved(connexion, id_livre);
 		isReserve.setOpaque(true);
 		if(id_et == -1) {
 			isReserve.setBackground(Color.GREEN);
